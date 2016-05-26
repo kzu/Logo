@@ -2,7 +2,10 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'Logo.props'))\Logo.props" />
   <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Colores.cs" />
     <Compile Include="Logo.cs" />
+    <Compile Include="Pantalla.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
