@@ -2,17 +2,19 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'Logo.props'))\Logo.props" />
   <ItemGroup>
+    <Compile Include="AeroSnap.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Colores.cs" />
-    <Compile Include="Logo.cs" />
+    <Compile Include="Tortuga.cs" />
     <Compile Include="Pantalla.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="System.Drawing" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'Logo.targets'))\Logo.targets" />
 </Project>

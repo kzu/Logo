@@ -8,6 +8,12 @@ namespace Logo
 	/// </summary>
 	public static class Tortuga
 	{
+		static Tortuga()
+		{
+			GraphicsWindow.Show();
+			AeroSnap.SnapRight();
+		}
+
 		/// <summary>
 		/// El ángulo en que se orienta la tortuga. Al asignar 
 		/// un valor, la tortuga rota instantáneamente al nuevo 
@@ -55,9 +61,9 @@ namespace Logo
 		/// <summary>
 		/// Mostrar la tortuga en la pantalla.
 		/// </summary>
-		public static void Mostrar ()
+		public static void Mostrar()
 		{
-			Turtle.Show ();
+			Turtle.Show();
 		}
 
 		/// <summary>
@@ -92,7 +98,7 @@ namespace Logo
 		{
 			Turtle.MoveTo(x, y);
 		}
-		
+
 		/// <summary>
 		/// Apoya el lápiz para que la tortuga dibuje mientras 
 		/// se mueve.
