@@ -3,6 +3,11 @@
 
   <PropertyGroup>
     <NuGetPath Condition=" '$(NuGetPath)' == '' ">$(MSBuildThisFileDirectory).nuget</NuGetPath>
+	<!-- We rely on a fix for https://github.com/NuGet/Home/issues/2851 
+		 Remove our custom drop location and switch to public latest once that 
+		 ships. -->
+	<!-- <NuGetUrl>https://dist.nuget.org/win-x86-commandline/latest/nuget.exe</NuGetUrl> -->
+	<NuGetUrl>http://cdn.cazzulino.com/NuGet.exe</NuGetUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
@@ -83,7 +88,7 @@
 
     <MakeDir Directories="$(NuGetPath)" Condition=" !Exists($(NuGetPath)) " />
     <MakeDir Directories="$(LocalAppData)\NuGet" Condition=" !Exists('$(LocalAppData)\NuGet') " />    
-    <Exec Command="&quot;$(PowerShell)&quot; -Command &quot;&amp; { (New-Object System.Net.WebClient).DownloadFile('https://dist.nuget.org/win-x86-commandline/latest/nuget.exe', '$(CachedNuGet)') }&quot;"
+    <Exec Command="&quot;$(PowerShell)&quot; -Command &quot;&amp; { (New-Object System.Net.WebClient).DownloadFile('$(NuGetUrl)', '$(CachedNuGet)') }&quot;"
           Condition=" !Exists($(NuGet)) And !Exists($(CachedNuGet)) " />
     <Copy SourceFiles="$(CachedNuGet)" DestinationFolder="$(NuGetPath)" Condition="!Exists($(NuGet))" />
     <Exec Command='"$(NuGet)" Update -Self' ContinueOnError='true' />  	  
