@@ -14,6 +14,7 @@ namespace Logo
 		public static void Limpiar()
 		{
 			GraphicsWindow.Clear();
+			Turtle.Show();
 		}
 	}
 }

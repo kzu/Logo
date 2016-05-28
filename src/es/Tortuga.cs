@@ -1,4 +1,6 @@
-﻿using Microsoft.SmallBasic.Library;
+﻿using System;
+using System.Reflection;
+using Microsoft.SmallBasic.Library;
 
 namespace Logo
 {
@@ -6,11 +8,11 @@ namespace Logo
 	/// Imagina que la tortuga tiene un lápiz, que puedes levantar 
 	/// o bajar para que dibuje cuando se mueve (o no).
 	/// </summary>
-	public static class Tortuga
+	public static partial class Tortuga
 	{
 		static Tortuga()
 		{
-			GraphicsWindow.Show();
+			Turtle.Show();
 			AeroSnap.SnapRight();
 		}
 
@@ -30,10 +32,10 @@ namespace Logo
 		/// Si la velocidad de la tortuga es 10, se mueve y 
 		/// rota en forma instantánea.
 		/// </summary>
-		public static int Velocidad
+		public static Velocidad Velocidad
 		{
-			get { return Turtle.Speed; }
-			set { Turtle.Speed = value; }
+			get { return (Velocidad)(int)Turtle.Speed; }
+			set { Turtle.Speed = (int)value; }
 		}
 
 		/// <summary>
@@ -56,22 +58,6 @@ namespace Logo
 		{
 			get { return Turtle.Y; }
 			set { Turtle.Y = value; }
-		}
-
-		/// <summary>
-		/// Mostrar la tortuga en la pantalla.
-		/// </summary>
-		public static void Mostrar()
-		{
-			Turtle.Show();
-		}
-
-		/// <summary>
-		/// Ocultar la tortuga de la pantalla.
-		/// </summary>
-		public static void Ocultar()
-		{
-			Turtle.Hide();
 		}
 
 		/// <summary>
@@ -100,24 +86,6 @@ namespace Logo
 		}
 
 		/// <summary>
-		/// Apoya el lápiz para que la tortuga dibuje mientras 
-		/// se mueve.
-		/// </summary>
-		public static void ApoyarLapiz()
-		{
-			Turtle.PenDown();
-		}
-
-		/// <summary>
-		/// Levanta el lápiz para que la tortuga deje de dibujar mientras 
-		/// se mueve.
-		/// </summary>
-		public static void LevantarLapiz()
-		{
-			Turtle.PenUp();
-		}
-
-		/// <summary>
 		/// Gira la tortuga en el ángulo indicada. 
 		/// El ángulo está en grados, y puede ser positivo o negativo.
 		/// Si es positivo, la tortuga gira a su derecha. 
@@ -143,33 +111,6 @@ namespace Logo
 		public static void GirarDerecha()
 		{
 			Turtle.TurnRight();
-		}
-
-		/// <summary>
-		/// Cambiá el tipo de lápiz que utiliza la tortuga.
-		/// </summary>
-		public static class Lapiz
-		{
-			/// <summary>
-			/// Color del lápiz que usa la tortuga. Podés usar 
-			/// colores conocidos de la lista Colores.
-			/// </summary>
-			public static string Color
-			{
-				get { return GraphicsWindow.PenColor; }
-				set { GraphicsWindow.PenColor = value; }
-			}
-
-			/// <summary>
-			/// Grosor del lápiz que usa la tortuga, como un 
-			/// número con decimales. El grosor del lápiz 
-			/// inicial de la tortuga es de 2.0
-			/// </summary>
-			public static double Grosor
-			{
-				get { return GraphicsWindow.PenWidth; }
-				set { GraphicsWindow.PenWidth = value; }
-			}
 		}
 	}
 }

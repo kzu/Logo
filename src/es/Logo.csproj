@@ -5,8 +5,10 @@
     <Compile Include="AeroSnap.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Colores.cs" />
+    <Compile Include="Lapiz.cs" />
     <Compile Include="Tortuga.cs" />
     <Compile Include="Pantalla.cs" />
+    <Compile Include="Velocidad.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

@@ -1,0 +1,26 @@
+---
+uti: com.xamarin.workbook
+platform: WPF
+packages: []
+---
+
+```csharp
+#r "bin\Logo.dll"
+#r "bin\SmallBasicLibrary.dll"
+```
+
+```csharp
+using Logo;
+using Microsoft.SmallBasic.Library;
+```
+
+```csharp
+Tortuga.Velocidad = Velocidad.Rapida;
+Tortuga.Lapiz.Color = Colores.Rojo;
+Tortuga.Mover(100);
+```
+
+```csharp
+using static Microsoft.SmallBasic.Library.GraphicsWindow;
+```
+

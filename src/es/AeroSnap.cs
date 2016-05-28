@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Linq;
+using System.Threading;
 
 namespace Logo
 {
@@ -10,16 +11,6 @@ namespace Logo
 	{
 		public static void SnapRight()
 		{
-			Microsoft.VisualBasic.Interaction.AppActivate("Small Basic Graphics Window");
-
-			KeyboardSend.KeyDown(Keys.LWin);
-			KeyboardSend.KeyDown(Keys.Right);
-			KeyboardSend.KeyUp(Keys.LWin);
-			KeyboardSend.KeyUp(Keys.Right);
-
-			KeyboardSend.KeyDown(Keys.Escape);
-			KeyboardSend.KeyUp(Keys.Escape);
-
 			var screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
 			var screenHeight = Screen.PrimaryScreen.WorkingArea.Height;
 
@@ -30,7 +21,18 @@ namespace Logo
 
 			ShowWindow(handle, SW_SHOWNORMAL);
 			MoveWindow(handle, 0, 0, screenWidth / 2, screenHeight, true);
-			SetFocus(handle);
+
+			Thread.Sleep(200);
+
+			Microsoft.VisualBasic.Interaction.AppActivate("Small Basic Graphics Window");
+
+			KeyboardSend.KeyDown(Keys.LWin);
+			KeyboardSend.KeyDown(Keys.Right);
+			KeyboardSend.KeyUp(Keys.LWin);
+			KeyboardSend.KeyUp(Keys.Right);
+
+			KeyboardSend.KeyDown(Keys.Escape);
+			KeyboardSend.KeyUp(Keys.Escape);
 		}
 
 		static int SW_SHOWNORMAL = 1;
