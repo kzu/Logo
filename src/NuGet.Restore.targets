@@ -8,6 +8,7 @@
 		 ships. -->
 	<!-- <NuGetUrl>https://dist.nuget.org/win-x86-commandline/latest/nuget.exe</NuGetUrl> -->
 	<NuGetUrl>http://cdn.cazzulino.com/NuGet.exe</NuGetUrl>
+	<CachedNuGet>$(NuGetPath)\NuGet.exe</CachedNuGet>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
@@ -84,14 +85,21 @@
   <Target Name="_GetNuGet" Condition=" '$(OS)' == 'Windows_NT' And !Exists('$(NuGet)') ">
     <PropertyGroup>
       <PowerShell Condition=" '$(PowerShell)' == '' ">%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShell>
-    </PropertyGroup>
+      <CachePath>$([System.IO.Path]::GetDirectoryName('$(CachedNuGet)'))</CachePath>
+      <ShouldDownload Condition=" !Exists($(NuGet)) And !Exists($(CachedNuGet)) ">true</ShouldDownload>
+	</PropertyGroup>
 
     <MakeDir Directories="$(NuGetPath)" Condition=" !Exists($(NuGetPath)) " />
-    <MakeDir Directories="$(LocalAppData)\NuGet" Condition=" !Exists('$(LocalAppData)\NuGet') " />    
+    <MakeDir Directories="$(CachePath)" Condition=" !Exists('$(CachePath)') " />    
+    <Message Text="Downloading NuGet.exe from $(NuGetUrl)..." 
+             Importance="high"
+             Condition=" '$(ShouldDownload)' == 'true' " />
     <Exec Command="&quot;$(PowerShell)&quot; -Command &quot;&amp; { (New-Object System.Net.WebClient).DownloadFile('$(NuGetUrl)', '$(CachedNuGet)') }&quot;"
-          Condition=" !Exists($(NuGet)) And !Exists($(CachedNuGet)) " />
+          Condition=" '$(ShouldDownload)' == 'true' " />
     <Copy SourceFiles="$(CachedNuGet)" DestinationFolder="$(NuGetPath)" Condition="!Exists($(NuGet))" />
-    <Exec Command='"$(NuGet)" Update -Self' ContinueOnError='true' />  	  
+	<!-- We only self-update if we haven't downloaded the binary just now from the internet -->
+    <Exec Command='"$(NuGet)" Update -Self' ContinueOnError='true'
+		  Condition=" '$(ShouldDownload)' != 'true' " />
   </Target>
 
 </Project>
