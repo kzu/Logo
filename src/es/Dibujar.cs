@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.SmallBasic.Library;
 
 namespace Logo
@@ -64,6 +65,47 @@ namespace Logo
 		public static void Rectangulo(int x1, int y1, int x2, int y2, int x3, int y3)
 		{
 			GraphicsWindow.DrawTriangle(x1, y1, x2, y2, x3, y3);
+		}
+
+		/// <summary>
+		/// Dibuja una línea de texto en la posición especificada.
+		/// </summary>
+		/// <param name="x">Posicion en el eje horizontal (izquierda/derecha) donde comenzar a escribir el texto.</param>
+		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde comenzar a escribir el texto.</param>
+		/// <param name="texto">Texto a escribir.</param>
+		public static void Texto(int x, int y, string texto, double? anchoMaximo = null, double? tamañoDeLetra = null, bool? letraGruesa = null, bool? letraCursiva = null, string tipoDeLetra = "")
+		{
+			double size = GraphicsWindow.FontSize;
+			bool bold = GraphicsWindow.FontBold;
+			bool italic = GraphicsWindow.FontItalic;
+			string font = GraphicsWindow.FontName;
+			try
+			{
+				if (tamañoDeLetra != null)
+					GraphicsWindow.FontSize = tamañoDeLetra.Value;
+				if (letraGruesa != null)
+					GraphicsWindow.FontBold = letraGruesa.Value;
+				if (letraCursiva != null)
+					GraphicsWindow.FontItalic = letraCursiva.Value;
+				if (tipoDeLetra != null)
+					GraphicsWindow.FontName = tipoDeLetra;
+
+				if (anchoMaximo != null)
+					GraphicsWindow.DrawBoundText(x, y, anchoMaximo.Value, texto);
+				else
+					GraphicsWindow.DrawText(x, y, texto);
+			}
+			finally
+			{
+				if (tamañoDeLetra != null)
+					GraphicsWindow.FontSize = size;
+				if (letraGruesa != null)
+					GraphicsWindow.FontBold = bold;
+				if (letraCursiva != null)
+					GraphicsWindow.FontItalic = italic;
+				if (tipoDeLetra != null)
+					GraphicsWindow.FontName = font;
+			}
 		}
 	}
 }

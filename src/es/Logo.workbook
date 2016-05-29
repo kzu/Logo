@@ -11,14 +11,17 @@ packages: []
 
 ```csharp
 using Logo;
+using Microsoft.SmallBasic.Library;
 ```
 
 ```csharp
 Pantalla.Limpiar();
-Pantalla.MostrarGrilla();
+// Pantalla.MostrarGrilla();
 ```
 
 ```csharp
-Dibujar.Elipse(100, 100, 100, 100);
+Lapiz.Color = Color.Rojo;
+
+Dibujar.Texto(x: 200, y: 200, texto: "Hola Mundo", anchoMaximo: 150, letraGruesa: true, letraCursiva: true, tamañoDeLetra: 36, tipoDeLetra: "Consolas");
 ```
 

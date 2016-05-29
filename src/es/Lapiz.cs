@@ -13,7 +13,11 @@ namespace Logo
 		/// </summary>
 		public static Color Color
 		{
-			set { GraphicsWindow.PenColor = ColorConverter.ToString(value); }
+			set
+			{
+				GraphicsWindow.BrushColor = ColorConverter.ToString(value);
+				GraphicsWindow.PenColor = ColorConverter.ToString(value);
+			}
 		}
 
 		/// <summary>

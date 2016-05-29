@@ -38,7 +38,7 @@ namespace Logo
 			var current = GraphicsWindow.BrushColor;
 			try
 			{
-				Lapiz.Color = color;
+				GraphicsWindow.BrushColor = ColorConverter.ToString(color);
 				GraphicsWindow.FillEllipse(x, y, ancho, alto);
 			}
 			finally
@@ -74,7 +74,7 @@ namespace Logo
 			var current = GraphicsWindow.BrushColor;
 			try
 			{
-				Lapiz.Color = color;
+				GraphicsWindow.BrushColor = ColorConverter.ToString(color);
 				GraphicsWindow.FillRectangle(x, y, ancho, alto);
 			}
 			finally
@@ -113,7 +113,7 @@ namespace Logo
 			var current = GraphicsWindow.BrushColor;
 			try
 			{
-				Lapiz.Color = color;
+				GraphicsWindow.BrushColor = ColorConverter.ToString(color);
 				GraphicsWindow.FillTriangle(x1, y1, x2, y2, x3, y3);
 			}
 			finally
