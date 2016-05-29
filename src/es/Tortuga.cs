@@ -83,7 +83,6 @@ namespace Logo
 		/// <param name="distancia">La distancia que la tortuga debe moverse.</param>
 		public static void Mover(double distancia)
 		{
-			Turtle.Show();
 			Turtle.Move(distancia);
 		}
 
@@ -97,7 +96,6 @@ namespace Logo
 		/// <param name="y">Ubicación en el eje vertical (abajo/arriba) del destino.</param>
 		public static void MoverHasta(double x, double y)
 		{
-			Turtle.Show();
 			Turtle.MoveTo(x, y);
 		}
 
@@ -110,7 +108,6 @@ namespace Logo
 		/// <param name="angulo">Angulo de giro de la tortuga.</param>
 		public static void Girar(double angulo)
 		{
-			Turtle.Show();
 			Turtle.Turn(angulo);
 		}
 
@@ -119,7 +116,6 @@ namespace Logo
 		/// </summary>
 		public static void GirarIzquierda()
 		{
-			Turtle.Show();
 			Turtle.TurnLeft();
 		}
 
@@ -128,7 +124,6 @@ namespace Logo
 		/// </summary>
 		public static void GirarDerecha()
 		{
-			Turtle.Show();
 			Turtle.TurnRight();
 		}
 
