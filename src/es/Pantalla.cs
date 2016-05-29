@@ -25,6 +25,11 @@ namespace Logo
 			GraphicsWindow.Clear();
 		}
 
+		public static void Mostrar()
+		{
+			screen.Show();
+		}
+
 		public static void MostrarGrilla()
 		{
 			screen.Grid.Show();

@@ -35,7 +35,7 @@ namespace Logo
 		/// <param name="color">Color del lápiz a utilizar para pintar.</param>
 		public static void Elipse(int x, int y, int ancho, int alto, Color color)
 		{
-			var current = GraphicsWindow.PenColor;
+			var current = GraphicsWindow.BrushColor;
 			try
 			{
 				Lapiz.Color = color;
@@ -43,7 +43,7 @@ namespace Logo
 			}
 			finally
 			{
-				GraphicsWindow.PenColor = current;
+				GraphicsWindow.BrushColor = current;
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Logo
 		/// <param name="color">Color del lápiz a utilizar para pintar.</param>
 		public static void Rectangulo(int x, int y, int ancho, int alto, Color color)
 		{
-			var current = GraphicsWindow.PenColor;
+			var current = GraphicsWindow.BrushColor;
 			try
 			{
 				Lapiz.Color = color;
@@ -79,7 +79,7 @@ namespace Logo
 			}
 			finally
 			{
-				GraphicsWindow.PenColor = current;
+				GraphicsWindow.BrushColor = current;
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace Logo
 		/// <param name="color">Color del lápiz a utilizar para pintar.</param>
 		public static void Triangulo(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
 		{
-			var current = GraphicsWindow.PenColor;
+			var current = GraphicsWindow.BrushColor;
 			try
 			{
 				Lapiz.Color = color;
@@ -118,7 +118,7 @@ namespace Logo
 			}
 			finally
 			{
-				GraphicsWindow.PenColor = current;
+				GraphicsWindow.BrushColor = current;
 			}
 		}
 

@@ -44,5 +44,15 @@ namespace Logo
 			NativeMethods.MoveWindow(graphics, screenWidth / 2, 0, screenWidth / 2, screenHeight, true);
 			NativeMethods.SetFocus(graphics);
 		}
+
+		internal void Show()
+		{
+			var graphics = System.Windows.Application.Current.Windows.OfType<Window>()
+				.Where(w => w.Title == GraphicsWindow.Title)
+				.Select(w => new WindowInteropHelper(w).Handle)
+				.First();
+
+			NativeMethods.ShowWindow(graphics, NativeMethods.SW_SHOWNORMAL);
+		}
 	}
 }
