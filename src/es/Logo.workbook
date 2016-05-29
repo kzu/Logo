@@ -15,12 +15,16 @@ using Microsoft.SmallBasic.Library;
 ```
 
 ```csharp
-Tortuga.Velocidad = Velocidad.Rapida;
-Tortuga.Lapiz.Color = Colores.Rojo;
-Tortuga.Mover(100);
+Pantalla.MostrarGrilla();
 ```
 
 ```csharp
-using static Microsoft.SmallBasic.Library.GraphicsWindow;
+Pantalla.OcultarGrilla();
 ```
 
+```csharp
+Dibujar.Circulo(....)
+Dibujar.Rectangulo()
+Dibujar.Triangulo()
+Pintar.Circulo(....)
+```

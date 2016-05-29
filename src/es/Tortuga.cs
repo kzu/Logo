@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using Microsoft.SmallBasic.Library;
+﻿using Microsoft.SmallBasic.Library;
 
 namespace Logo
 {
@@ -12,8 +10,8 @@ namespace Logo
 	{
 		static Tortuga()
 		{
+			Pantalla.Init();
 			Turtle.Show();
-			AeroSnap.SnapRight();
 		}
 
 		/// <summary>
@@ -69,6 +67,7 @@ namespace Logo
 		/// <param name="distancia">La distancia que la tortuga debe moverse.</param>
 		public static void Mover(double distancia)
 		{
+			Turtle.Show();
 			Turtle.Move(distancia);
 		}
 
@@ -82,6 +81,7 @@ namespace Logo
 		/// <param name="y">Ubicación en el eje vertical (abajo/arriba) del destino.</param>
 		public static void MoverHasta(double x, double y)
 		{
+			Turtle.Show();
 			Turtle.MoveTo(x, y);
 		}
 
@@ -94,6 +94,7 @@ namespace Logo
 		/// <param name="angulo">Angulo de giro de la tortuga.</param>
 		public static void Girar(double angulo)
 		{
+			Turtle.Show();
 			Turtle.Turn(angulo);
 		}
 
@@ -102,6 +103,7 @@ namespace Logo
 		/// </summary>
 		public static void GirarIzquierda()
 		{
+			Turtle.Show();
 			Turtle.TurnLeft();
 		}
 
@@ -110,7 +112,48 @@ namespace Logo
 		/// </summary>
 		public static void GirarDerecha()
 		{
+			Turtle.Show();
 			Turtle.TurnRight();
+		}
+
+		public static class Lapiz
+		{
+			/// <summary>
+			/// Apoya el lápiz para que la tortuga dibuje mientras 
+			/// se mueve.
+			/// </summary>
+			public static void Apoyar()
+			{
+				Turtle.PenDown();
+			}
+
+			/// <summary>
+			/// Levanta el lápiz para que la tortuga deje de dibujar mientras 
+			/// se mueve.
+			/// </summary>
+			public static void Levantar()
+			{
+				Turtle.PenUp();
+			}
+
+			/// <summary>
+			/// Color del lápiz que usa la tortuga.
+			/// </summary>
+			public static Color Color
+			{
+				set { Logo.Lapiz.Color = value; }
+			}
+
+			/// <summary>
+			/// Grosor del lápiz que usa la tortuga, como un 
+			/// número con decimales. El grosor del lápiz 
+			/// inicial de la tortuga es de 2.0
+			/// </summary>
+			public static double Grosor
+			{
+				get { return Logo.Lapiz.Grosor; }
+				set { Logo.Lapiz.Grosor = value; }
+			}
 		}
 	}
 }

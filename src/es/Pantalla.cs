@@ -7,6 +7,15 @@ namespace Logo
 	/// </summary>
 	public static class Pantalla
 	{
+		static readonly Screen screen;
+
+		static Pantalla()
+		{
+			screen = new Screen();
+		}
+
+		internal static void Init() { }
+
 		/// <summary>
 		/// Limpia la pantalla de todo lo que se haya 
 		/// dibujado hasta el momento.
@@ -14,7 +23,16 @@ namespace Logo
 		public static void Limpiar()
 		{
 			GraphicsWindow.Clear();
-			Turtle.Show();
+		}
+
+		public static void MostrarGrilla()
+		{
+			screen.Grid.Show();
+		}
+
+		public static void OcultarGrilla()
+		{
+			screen.Grid.Hide();
 		}
 	}
 }

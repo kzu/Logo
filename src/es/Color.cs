@@ -4,7 +4,7 @@
 	/// Paleta de colores conocidos para utilizar con 
 	/// Tortuga.Lapiz.Color.
 	/// </summary>
-	public enum Colores
+	public enum Color
 	{
 		Blanco,
 		Negro,
