@@ -90,7 +90,8 @@ namespace Logo
 
 				BindingOperations.SetBinding(grid, Grid.HeightProperty, height);
 				BindingOperations.SetBinding(grid, Grid.WidthProperty, width);
-				Canvas.SetZIndex(coordinates, int.MaxValue);
+				Panel.SetZIndex(coordinates, int.MaxValue);
+				Panel.SetZIndex(grid, int.MinValue);
 			}
 		}
 
@@ -136,6 +137,7 @@ namespace Logo
 
 					Grid.SetColumn(border, col);
 					Grid.SetRow(border, row);
+					Panel.SetZIndex(border, int.MinValue);
 
 					grid.Children.Add(border);
 				}

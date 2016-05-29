@@ -11,20 +11,14 @@ packages: []
 
 ```csharp
 using Logo;
-using Microsoft.SmallBasic.Library;
 ```
 
 ```csharp
+Pantalla.Limpiar();
 Pantalla.MostrarGrilla();
 ```
 
 ```csharp
-Pantalla.OcultarGrilla();
+Dibujar.Elipse(100, 100, 100, 100);
 ```
 
-```csharp
-Dibujar.Circulo(....)
-Dibujar.Rectangulo()
-Dibujar.Triangulo()
-Pintar.Circulo(....)
-```

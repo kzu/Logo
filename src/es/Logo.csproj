@@ -5,6 +5,8 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ColorConverter.cs" />
     <Compile Include="Color.cs" />
+    <Compile Include="Pintar.cs" />
+    <Compile Include="Dibujar.cs" />
     <Compile Include="Lapiz.cs" />
     <Compile Include="Tortuga.cs" />
     <Compile Include="Pantalla.cs" />

@@ -59,6 +59,22 @@ namespace Logo
 		}
 
 		/// <summary>
+		/// Mostrar la tortuga en la pantalla.
+		/// </summary>
+		public static void Mostrar()
+		{
+			Turtle.Show();
+		}
+
+		/// <summary>
+		/// Ocultar la tortuga de la pantalla.
+		/// </summary>
+		public static void Ocultar()
+		{
+			Turtle.Hide();
+		}
+
+		/// <summary>
 		/// Mueve la tortuga la distancia indicada.
 		/// Si el lápiz de la tortuga está apoyado, va a 
 		/// dibujar una linea mientras se mueve. 
