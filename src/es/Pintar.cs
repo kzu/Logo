@@ -12,6 +12,11 @@ namespace Logo
 	/// </summary>
 	public static class Pintar
 	{
+		static Pintar()
+		{
+			Pantalla.Init();
+		}
+
 		/// <summary>
 		/// Pinta una elipse (por ejemplo un círculo o un óvalo) en la 
 		/// pantalla utilizando el lápiz configurado en <see cref="Lapiz"/>.
@@ -20,7 +25,7 @@ namespace Logo
 		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde comenzar a dibujar.</param>
 		/// <param name="ancho">Ancho de la elipse a dibujar.</param>
 		/// <param name="alto">Alto de la elipse a dibujar.</param>
-		public static void Elipse(int x, int y, int ancho, int alto)
+		public static void Elipse(double x, double y, int ancho, int alto)
 		{
 			GraphicsWindow.FillEllipse(x, y, ancho, alto);
 		}
@@ -33,7 +38,7 @@ namespace Logo
 		/// <param name="ancho">Ancho de la elipse a dibujar.</param>
 		/// <param name="alto">Alto de la elipse a dibujar.</param>
 		/// <param name="color">Color del lápiz a utilizar para pintar.</param>
-		public static void Elipse(int x, int y, int ancho, int alto, Color color)
+		public static void Elipse(double x, double y, int ancho, int alto, Color color)
 		{
 			var current = GraphicsWindow.BrushColor;
 			try
@@ -54,7 +59,7 @@ namespace Logo
 		/// <param name="y">Posición en el eje vertical (abajo/arriba) donde comenzar a dibujar.</param>
 		/// <param name="ancho">Ancho del rectángulo a dibujar.</param>
 		/// <param name="alto">Alto del rectángulo a dibujar.</param>
-		public static void Rectangulo(int x, int y, int ancho, int alto)
+		public static void Rectangulo(double x, double y, int ancho, int alto)
 		{
 			GraphicsWindow.FillRectangle(x, y, ancho, alto);
 		}
@@ -69,7 +74,7 @@ namespace Logo
 		/// <param name="ancho">Ancho del rectángulo a dibujar.</param>
 		/// <param name="alto">Alto del rectángulo a dibujar.</param>
 		/// <param name="color">Color del lápiz a utilizar para pintar.</param>
-		public static void Rectangulo(int x, int y, int ancho, int alto, Color color)
+		public static void Rectangulo(double x, double y, int ancho, int alto, Color color)
 		{
 			var current = GraphicsWindow.BrushColor;
 			try
@@ -93,7 +98,7 @@ namespace Logo
 		/// <param name="x3">Posición en el eje horizontal (izquierda/derecha) del tercer vértice del triángulo.</param>
 		/// <param name="y3">Posición en el eje vertical (abajo/arriba) del tercer vértice del triángulo.</param>
 		/// <param name="color">Color del lápiz a utilizar para pintar.</param>
-		public static void Triangulo(int x1, int y1, int x2, int y2, int x3, int y3)
+		public static void Triangulo(double x1, double y1, double x2, double y2, double x3, double y3)
 		{
 			GraphicsWindow.FillTriangle(x1, y1, x2, y2, x3, y3);
 		}
@@ -108,7 +113,7 @@ namespace Logo
 		/// <param name="x3">Posición en el eje horizontal (izquierda/derecha) del tercer vértice del triángulo.</param>
 		/// <param name="y3">Posición en el eje vertical (abajo/arriba) del tercer vértice del triángulo.</param>
 		/// <param name="color">Color del lápiz a utilizar para pintar.</param>
-		public static void Triangulo(int x1, int y1, int x2, int y2, int x3, int y3, Color color)
+		public static void Triangulo(double x1, double y1, double x2, double y2, double x3, double y3, Color color)
 		{
 			var current = GraphicsWindow.BrushColor;
 			try

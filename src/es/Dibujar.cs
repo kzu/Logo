@@ -13,6 +13,11 @@ namespace Logo
 	/// </summary>
 	public static class Dibujar
 	{
+		static Dibujar()
+		{
+			Pantalla.Init();
+		}
+
 		/// <summary>
 		/// Dibuja una elipse (por ejemplo un círculo o un óvalo) en la 
 		/// pantalla utilizando el lápiz configurado en <see cref="Lapiz"/>.
@@ -21,9 +26,11 @@ namespace Logo
 		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde comenzar a dibujar.</param>
 		/// <param name="ancho">Ancho de la elipse a dibujar.</param>
 		/// <param name="alto">Alto de la elipse a dibujar.</param>
-		public static void Elipse(int x, int y, int ancho, int alto)
+		public static Elemento Elipse(double x, double y, int ancho, int alto)
 		{
-			GraphicsWindow.DrawEllipse(x, y, ancho, alto);
+			var name = Shapes.AddEllipse(ancho, alto);
+			Shapes.Move(name, x, y);
+			return new Elemento(name);
 		}
 
 		/// <summary>
@@ -34,9 +41,9 @@ namespace Logo
 		/// <param name="y1">Posicion en el eje vertical (abajo/arriba) donde donde comienza la línea.</param>
 		/// <param name="x2">Posicion en el eje horizontal (izquierda/derecha) donde termina la línea.</param>
 		/// <param name="y2">Posicion en el eje vertical (abajo/arriba) donde termina la línea.</param>
-		public static void Linea(int x1, int y1, int x2, int y2)
+		public static Elemento Linea(double x1, double y1, double x2, double y2)
 		{
-			GraphicsWindow.DrawLine(x1, y1, x2, y2);
+			return new Elemento(Shapes.AddLine(x1, y1, x2, y2));
 		}
 
 		/// <summary>
@@ -47,9 +54,11 @@ namespace Logo
 		/// <param name="y">Posición en el eje vertical (abajo/arriba) donde comenzar a dibujar.</param>
 		/// <param name="ancho">Ancho del rectángulo a dibujar.</param>
 		/// <param name="alto">Alto del rectángulo a dibujar.</param>
-		public static void Rectangulo(int x, int y, int ancho, int alto)
+		public static Elemento Rectangulo(double x, double y, int ancho, int alto)
 		{
-			GraphicsWindow.DrawRectangle(x, y, ancho, alto);
+			var name = Shapes.AddRectangle(ancho, alto);
+			Shapes.Move(name, x, y);
+			return new Elemento(name);
 		}
 
 		/// <summary>
@@ -62,9 +71,9 @@ namespace Logo
 		/// <param name="y2">Posición en el eje vertical (abajo/arriba) del segundo vértice del triángulo.</param>
 		/// <param name="x3">Posición en el eje horizontal (izquierda/derecha) del tercer vértice del triángulo.</param>
 		/// <param name="y3">Posición en el eje vertical (abajo/arriba) del tercer vértice del triángulo.</param>
-		public static void Rectangulo(int x1, int y1, int x2, int y2, int x3, int y3)
+		public static Elemento Triangulo(double x1, double y1, double x2, double y2, double x3, double y3)
 		{
-			GraphicsWindow.DrawTriangle(x1, y1, x2, y2, x3, y3);
+			return new Elemento(Shapes.AddTriangle(x1, y1, x2, y2, x3, y3));
 		}
 
 		/// <summary>
@@ -73,7 +82,7 @@ namespace Logo
 		/// <param name="x">Posicion en el eje horizontal (izquierda/derecha) donde comenzar a escribir el texto.</param>
 		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde comenzar a escribir el texto.</param>
 		/// <param name="texto">Texto a escribir.</param>
-		public static void Texto(int x, int y, string texto, double? anchoMaximo = null, double? tamañoDeLetra = null, bool? letraGruesa = null, bool? letraCursiva = null, string tipoDeLetra = "")
+		public static Elemento Texto(double x, double y, string texto, double? tamañoDeLetra = null, bool? letraGruesa = null, bool? letraCursiva = null, string tipoDeLetra = "")
 		{
 			double size = GraphicsWindow.FontSize;
 			bool bold = GraphicsWindow.FontBold;
@@ -90,10 +99,9 @@ namespace Logo
 				if (tipoDeLetra != null)
 					GraphicsWindow.FontName = tipoDeLetra;
 
-				if (anchoMaximo != null)
-					GraphicsWindow.DrawBoundText(x, y, anchoMaximo.Value, texto);
-				else
-					GraphicsWindow.DrawText(x, y, texto);
+				var name = Shapes.AddText(texto);
+				Shapes.Move(name, x, y);
+				return new Elemento(name);
 			}
 			finally
 			{

@@ -22,8 +22,6 @@ namespace Logo
 
 		void Snap()
 		{
-			GraphicsWindow.Show();
-
 			var screenWidth = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
 			var screenHeight = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
 
@@ -32,17 +30,28 @@ namespace Logo
 				.Select(p => p.MainWindowHandle)
 				.First();
 
-			NativeMethods.ShowWindow(workbook, NativeMethods.SW_SHOWNORMAL);
-			NativeMethods.MoveWindow(workbook, 0, 0, screenWidth / 2, screenHeight, true);
-
 			var graphics = System.Windows.Application.Current.Windows.OfType<Window>()
 				.Where(w => w.Title == GraphicsWindow.Title)
-				.Select(w => new WindowInteropHelper(w).Handle)
 				.First();
+			graphics.Show();
+			graphics.Topmost = true;
+			graphics.Activate();
 
-			NativeMethods.ShowWindow(graphics, NativeMethods.SW_SHOWNORMAL);
-			NativeMethods.MoveWindow(graphics, screenWidth / 2, 0, screenWidth / 2, screenHeight, true);
-			NativeMethods.SetFocus(graphics);
+			//SendKeys.KeyDown(System.Windows.Forms.Keys.LWin);
+			//SendKeys.KeyDown(System.Windows.Forms.Keys.Right);
+			//SendKeys.KeyUp(System.Windows.Forms.Keys.Right);
+			//SendKeys.KeyUp(System.Windows.Forms.Keys.LWin);
+
+			//NativeMethods.ShowWindow(workbook, NativeMethods.SW_SHOWNOACTIVATE);
+			//NativeMethods.MoveWindow(workbook, 0, 0, screenWidth / 2, screenHeight, true);
+
+			//var graphics = System.Windows.Application.Current.Windows.OfType<Window>()
+			//	.Where(w => w.Title == GraphicsWindow.Title)
+			//	.Select(w => new WindowInteropHelper(w).Handle)
+			//	.First();
+
+			//NativeMethods.ShowWindow(graphics, NativeMethods.SW_SHOWNOACTIVATE);
+			//NativeMethods.MoveWindow(graphics, screenWidth / 2, 0, screenWidth / 2, screenHeight, true);
 		}
 
 		internal void Show()
@@ -52,7 +61,7 @@ namespace Logo
 				.Select(w => new WindowInteropHelper(w).Handle)
 				.First();
 
-			NativeMethods.ShowWindow(graphics, NativeMethods.SW_SHOWNORMAL);
+			NativeMethods.ShowWindow(graphics, NativeMethods.SW_SHOWNOACTIVATE);
 		}
 	}
 }

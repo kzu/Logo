@@ -22,6 +22,6 @@ Pantalla.Limpiar();
 ```csharp
 Lapiz.Color = Color.Rojo;
 
-Dibujar.Texto(x: 200, y: 200, texto: "Hola Mundo", anchoMaximo: 150, letraGruesa: true, letraCursiva: true, tamañoDeLetra: 36, tipoDeLetra: "Consolas");
+Dibujar.Texto(x: 200, y: 200, texto: "Hola Mundo", letraGruesa: true, letraCursiva: true, tamañoDeLetra: 36, tipoDeLetra: "Consolas").Rotar(180);
 ```
 

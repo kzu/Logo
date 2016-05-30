@@ -7,11 +7,12 @@ namespace Logo
 	static class NativeMethods
 	{
 		public static int SW_SHOWNORMAL = 1;
+		public static int SW_SHOWNOACTIVATE = 4;
 
 		[DllImport("user32.dll")]
-		public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+		public static extern bool MoveWindow(IntPtr hWnd, double x, double y, int nWidth, int nHeight, bool bRepaint);
 		[DllImport("user32.dll")]
-		public static extern bool ShowWindow(IntPtr hWnd, int X);
+		public static extern bool ShowWindow(IntPtr hWnd, double x);
 		[DllImport("user32.dll")]
 		public static extern bool SetFocus(IntPtr hWnd);
 	}
