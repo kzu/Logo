@@ -15,5 +15,6 @@
 		Azul, 
 		Indigo,
 		Violeta,
+		Transparente,
 	}
 }

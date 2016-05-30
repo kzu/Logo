@@ -7,11 +7,11 @@ namespace Logo
 	/// </summary>
 	public static class Pantalla
 	{
-		static readonly Screen screen;
+		static readonly CoreGraphics screen;
 
 		static Pantalla()
 		{
-			screen = new Screen();
+			screen = new CoreGraphics();
 		}
 
 		internal static void Init() { }
@@ -27,17 +27,17 @@ namespace Logo
 
 		public static void Mostrar()
 		{
-			screen.Show();
+			screen.ShowWindow();
 		}
 
 		public static void MostrarGrilla()
 		{
-			screen.Grid.Show();
+			screen.GridLines.Show();
 		}
 
 		public static void OcultarGrilla()
 		{
-			screen.Grid.Hide();
+			screen.GridLines.Hide();
 		}
 	}
 }

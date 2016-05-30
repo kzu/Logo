@@ -16,12 +16,9 @@ using Microsoft.SmallBasic.Library;
 
 ```csharp
 Pantalla.Limpiar();
-// Pantalla.MostrarGrilla();
 ```
 
 ```csharp
-Lapiz.Color = Color.Rojo;
-
-Dibujar.Texto(x: 200, y: 200, texto: "Hola Mundo", letraGruesa: true, letraCursiva: true, tamañoDeLetra: 36, tipoDeLetra: "Consolas").Rotar(180);
+Pintar.Rectangulo().Rotar(duracion: 500).Ocultar(duracion: 1500);
 ```
 

@@ -10,13 +10,13 @@ namespace Logo
 	/// <summary>
 	/// Representa a cualquier elemento agregado a la pantalla.
 	/// </summary>
-	public class Elemento : IFluentInterface
+	public class Elemento
 	{
-		string name;
+		string shapeName;
 
-		internal Elemento(string name)
+		internal Elemento(string shapeName)
 		{
-			this.name = name;
+			this.shapeName = shapeName;
 		}
 
 		/// <summary>
@@ -26,8 +26,8 @@ namespace Logo
 		/// </summary>
 		public int Transparencia
 		{
-			get { return Shapes.GetOpacity(name); }
-			set { Shapes.SetOpacity(name, value); }
+			get { return Shapes.GetOpacity(shapeName); }
+			set { Shapes.SetOpacity(shapeName, value); }
 		}
 
 		/// <summary>
@@ -35,48 +35,50 @@ namespace Logo
 		/// </summary>
 		public void Borrar()
 		{
-			Shapes.Remove(name);
+			Shapes.Remove(shapeName);
 		}
 
 		/// <summary>
-		/// Mueve el elemento a una nueva posición, en forma 
-		/// instantánea.
+		/// Mueve el elemento a una nueva posición, opcionalmente con una animación que 
+		/// dura el tiempo especificado en milisegundos.
 		/// </summary>
 		/// <param name="x">Posicion en el eje horizontal (izquierda/derecha) donde mover el elemento.</param>
 		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde mover el elemento.</param>
-		public void Mover(double x, double y)
+		public Elemento Mover(double? x = null, double? y = null, double? duracion = null)
 		{
-			Shapes.Move(name, x, y);
+			CoreGraphics.MoveShape(shapeName, x, y, duracion);
+			return this;
 		}
 
 		/// <summary>
-		/// Mueve el elemento a una nueva posición, con una animación que 
-		/// dura el tiempo especificado.
+		/// Muestra el elemento, opcionalmente utilizado una animacion desde 
+		/// el valor actual de <see cref="Transparencia"/> al maximo de 100.
 		/// </summary>
-		/// <param name="x">Posicion en el eje horizontal (izquierda/derecha) donde mover el elemento.</param>
-		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde mover el elemento.</param>
-		public void Mover(double x, double y, double duracion)
+		public Elemento Mostrar(double? duracion = null)
 		{
-			Shapes.Animate(name, x, y, duracion);
-		}
-
-		public void Mostrar()
-		{
-			Shapes.ShowShape(name);
-		}
-
-		public void Ocultar()
-		{
-			Shapes.HideShape(name);
+			CoreGraphics.ShowShape(shapeName, duracion);
+			return this;
 		}
 
 		/// <summary>
-		/// Rota el elemento en el angulo especificado.
+		/// Oculta el elemento, opcionalmente utilizado una animacion desde 
+		/// el valor actual de <see cref="Transparencia"/> al minimo de 0.
+		/// </summary>
+		public Elemento Ocultar(double? duracion = null)
+		{
+			CoreGraphics.HideShape(shapeName, duracion);
+			return this;
+		}
+
+		/// <summary>
+		/// Rota el elemento en el angulo especificado, opcionalmente con una animación que 
+		/// dura el tiempo especificado en milisegundos.
 		/// </summary>
 		/// <param name="angulo">Ángulo de rotación.</param>
-		public void Rotar(double angulo)
+		public Elemento Rotar(double angulo = 90, double? duracion = null)
 		{
-			Shapes.Rotate(name, angulo);
+			CoreGraphics.RotateShape(shapeName, angulo, duracion);
+			return this;
 		}
 
 		/// <summary>
@@ -85,9 +87,15 @@ namespace Logo
 		/// </summary>
 		/// <param name="zoomX">Factor de zoom para el eje horizontal (izquierda/derecha).</param>
 		/// <param name="zoomY">Factor de zoom para el eje vertical (arriba/abajo).</param>
-		public void Zoom(double zoomX, double zoomY)
+		public Elemento Zoom(double zoomX = 2, double zoomY = 2)
 		{
-			Shapes.Zoom(name, zoomX, zoomY);
+			Shapes.Zoom(shapeName, zoomX, zoomY);
+			return this;
+		}
+
+		public static implicit operator string(Elemento elemento)
+		{
+			return elemento.shapeName;
 		}
 	}
 }

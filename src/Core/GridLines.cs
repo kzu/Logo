@@ -14,20 +14,6 @@ namespace Logo
 		public const int DefaultCellSize = 10;
 		public const double DefaultLineWidth = 0.5;
 
-		/// <summary>
-		/// Creates the grid lines controller from the 
-		/// static <see cref="GraphicsWindow"/>.
-		/// </summary>
-		public static GridLines Create(int cellSize = DefaultCellSize, double lineWidth = DefaultLineWidth)
-		{
-			var field = typeof(GraphicsWindow).GetFields(BindingFlags.Static | BindingFlags.NonPublic)
-				.FirstOrDefault(f => f.FieldType == typeof(Canvas));
-			if (field != null)
-				return new GridLines((Canvas)field.GetValue(null));
-
-			return new GridLines(new Canvas(), cellSize, lineWidth);
-		}
-
 		Canvas canvas;
 		int cellSize;
 		double lineWidth;
