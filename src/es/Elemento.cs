@@ -12,6 +12,8 @@ namespace Logo
 	/// </summary>
 	public class Elemento
 	{
+		Stack<Task> animations = new Stack<Task>();
+		bool continuation;
 		string shapeName;
 
 		internal Elemento(string shapeName)
@@ -30,6 +32,19 @@ namespace Logo
 			set { Shapes.SetOpacity(shapeName, value); }
 		}
 
+		public Elemento Esperar()
+		{
+			continuation = false;
+			Task.WaitAll(animations.ToArray());
+			return this;
+		}
+
+		public Elemento Continuar()
+		{
+			continuation = true;
+			return this;
+		}
+
 		/// <summary>
 		/// Elimina el elemento de la pantalla.
 		/// </summary>
@@ -46,8 +61,7 @@ namespace Logo
 		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde mover el elemento.</param>
 		public Elemento Mover(double? x = null, double? y = null, double? duracion = null)
 		{
-			CoreGraphics.MoveShape(shapeName, x, y, duracion);
-			return this;
+			return PushAnimation(CoreGraphics.MoveShape(shapeName, x, y, duracion));
 		}
 
 		/// <summary>
@@ -56,8 +70,7 @@ namespace Logo
 		/// </summary>
 		public Elemento Mostrar(double? duracion = null)
 		{
-			CoreGraphics.ShowShape(shapeName, duracion);
-			return this;
+			return PushAnimation(CoreGraphics.ShowShape(shapeName, duracion));
 		}
 
 		/// <summary>
@@ -66,8 +79,7 @@ namespace Logo
 		/// </summary>
 		public Elemento Ocultar(double? duracion = null)
 		{
-			CoreGraphics.HideShape(shapeName, duracion);
-			return this;
+			return PushAnimation(CoreGraphics.HideShape(shapeName, duracion));
 		}
 
 		/// <summary>
@@ -77,8 +89,7 @@ namespace Logo
 		/// <param name="angulo">Ángulo de rotación.</param>
 		public Elemento Rotar(double angulo = 90, double? duracion = null)
 		{
-			CoreGraphics.RotateShape(shapeName, angulo, duracion);
-			return this;
+			return PushAnimation(CoreGraphics.RotateShape(shapeName, angulo, duracion));
 		}
 
 		/// <summary>
@@ -87,9 +98,26 @@ namespace Logo
 		/// </summary>
 		/// <param name="zoomX">Factor de zoom para el eje horizontal (izquierda/derecha).</param>
 		/// <param name="zoomY">Factor de zoom para el eje vertical (arriba/abajo).</param>
-		public Elemento Zoom(double zoomX = 2, double zoomY = 2)
+		public Elemento Zoom(double zoomX = 2, double zoomY = 2, double? duracion = null)
 		{
-			Shapes.Zoom(shapeName, zoomX, zoomY);
+			return PushAnimation(CoreGraphics.ZoomShape(shapeName, zoomX, zoomY, duracion));
+		}
+
+		Elemento PushAnimation(Task animation)
+		{
+			if (continuation)
+			{
+				continuation = false;
+				if (animations.Count > 0)
+					animations.Push(animations.Pop().ContinueWith(async (t) => await animation));
+				else
+					animations.Push(animation);
+			}
+			else
+			{
+				animations.Push(animation);
+			}
+
 			return this;
 		}
 
