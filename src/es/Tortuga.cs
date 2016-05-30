@@ -15,6 +15,21 @@ namespace Logo
 		}
 
 		/// <summary>
+		/// Restablece la tortuga a su posicion y angulo iniciales, 
+		/// y limpia la pantalla de todo lo que haya hecho hasta el 
+		/// momento, llamando a Pantalla.Limpiar.
+		/// </summary>
+		public static void Restablecer()
+		{
+			Turtle.X = 320;
+			Turtle.Y = 240;
+			Turtle.Angle = 0;
+			Turtle.Speed = 5;
+			Turtle.PenDown();
+			Turtle.Show();
+		}
+
+		/// <summary>
 		/// El ángulo en que se orienta la tortuga. Al asignar 
 		/// un valor, la tortuga rota instantáneamente al nuevo 
 		/// ángulo.

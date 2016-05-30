@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.SmallBasic.Library;
+﻿using System.Drawing;
 using NativeColor = System.Drawing.Color;
 
 namespace Logo
 {
 	static class ColorConverter
 	{
-		public static string ToString(Color color)
+		const Color DefaultColor = Color.Azul;
+
+		public static string ToString(Color? color)
 		{
-			switch (color)
+			if (color == null)
+				return null;
+
+			switch (color.Value)
 			{
 				case Color.Blanco:
 					return ToString(NativeColor.White);

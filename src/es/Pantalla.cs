@@ -17,12 +17,16 @@ namespace Logo
 		internal static void Init() { }
 
 		/// <summary>
-		/// Limpia la pantalla de todo lo que se haya 
-		/// dibujado hasta el momento.
+		/// Borra de la pantalla todo lo que se haya 
+		/// dibujado hasta el momento y reestablece 
+		/// la tortuga a su estado inicial, sin 
+		/// mostrarla.
 		/// </summary>
-		public static void Limpiar()
+		public static void Borrar()
 		{
 			GraphicsWindow.Clear();
+			Tortuga.Restablecer();
+			Tortuga.Ocultar();
 		}
 
 		public static void Mostrar()

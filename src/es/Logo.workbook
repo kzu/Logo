@@ -15,10 +15,27 @@ using Microsoft.SmallBasic.Library;
 ```
 
 ```csharp
-Pantalla.Limpiar();
+Tortuga.Restablecer();
 ```
 
 ```csharp
-Pintar.Rectangulo().Rotar(duracion: 500).Ocultar(duracion: 1500);
+Pintar.Triangulo(color: Color.Verde).Mover(duracion: 1000).Mover(duracion: 500);
+Tortuga.Mover(100);
+Tortuga.GirarDerecha();
+```
+
+```csharp
+Pantalla.OcultarGrilla();
+Pintar
+	.Rectangulo(100, 100, 100, 300, Color.Rojo)
+	.Mover(x: 250, y: 250, duracion: 1500)
+	.Rotar(angulo: 180, duracion: 1500)
+	.Mover(duracion: 1500)
+	.Ocultar(duracion: 1500)
+	.Mostrar(duracion: 1500)
+	.Mover(x: 500, y: 500, duracion: 1500)
+	.Ocultar(duracion: 2000);
+
+Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
 ```
 

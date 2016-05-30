@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SmallBasic.Library;
 
@@ -12,6 +9,7 @@ namespace Logo
 	/// </summary>
 	public class Elemento
 	{
+		Task animation = Task.FromResult(true);
 		string shapeName;
 
 		internal Elemento(string shapeName)
@@ -30,6 +28,15 @@ namespace Logo
 			set { Shapes.SetOpacity(shapeName, value); }
 		}
 
+		public Task<Elemento> Terminar()
+		{
+			return Task.Run(() =>
+			{
+				SpinWait.SpinUntil(() => animation.IsCompleted);
+				return this;
+			});
+		}
+
 		/// <summary>
 		/// Elimina el elemento de la pantalla.
 		/// </summary>
@@ -44,8 +51,15 @@ namespace Logo
 		/// </summary>
 		/// <param name="x">Posicion en el eje horizontal (izquierda/derecha) donde mover el elemento.</param>
 		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde mover el elemento.</param>
-		public Elemento Mover(double? x = null, double? y = null, double? duracion = null)
+		public Elemento Mover(double? x = null, double? y = null, int? duracion = null)
 		{
+			if (x == null && y == null)
+			{
+				// If no args were provided, do something anyway by default
+				x = Shapes.GetLeft(shapeName) + 100;
+				y = Shapes.GetTop(shapeName) + 100;
+			}
+
 			CoreGraphics.MoveShape(shapeName, x, y, duracion);
 			return this;
 		}
@@ -54,7 +68,7 @@ namespace Logo
 		/// Muestra el elemento, opcionalmente utilizado una animacion desde 
 		/// el valor actual de <see cref="Transparencia"/> al maximo de 100.
 		/// </summary>
-		public Elemento Mostrar(double? duracion = null)
+		public Elemento Mostrar(int? duracion = null)
 		{
 			CoreGraphics.ShowShape(shapeName, duracion);
 			return this;
@@ -64,7 +78,7 @@ namespace Logo
 		/// Oculta el elemento, opcionalmente utilizado una animacion desde 
 		/// el valor actual de <see cref="Transparencia"/> al minimo de 0.
 		/// </summary>
-		public Elemento Ocultar(double? duracion = null)
+		public Elemento Ocultar(int? duracion = null)
 		{
 			CoreGraphics.HideShape(shapeName, duracion);
 			return this;
@@ -75,7 +89,7 @@ namespace Logo
 		/// dura el tiempo especificado en milisegundos.
 		/// </summary>
 		/// <param name="angulo">Ángulo de rotación.</param>
-		public Elemento Rotar(double angulo = 90, double? duracion = null)
+		public Elemento Rotar(double angulo = 90, int? duracion = null)
 		{
 			CoreGraphics.RotateShape(shapeName, angulo, duracion);
 			return this;
@@ -87,9 +101,16 @@ namespace Logo
 		/// </summary>
 		/// <param name="zoomX">Factor de zoom para el eje horizontal (izquierda/derecha).</param>
 		/// <param name="zoomY">Factor de zoom para el eje vertical (arriba/abajo).</param>
-		public Elemento Zoom(double zoomX = 2, double zoomY = 2)
+		public Elemento Zoom(double? zoomX, double? zoomY, int? duracion = null)
 		{
-			Shapes.Zoom(shapeName, zoomX, zoomY);
+			if (zoomX == null && zoomY == null)
+			{
+				// Do something even if no values were provided at all.
+				zoomX = 2;
+				zoomY = 2;
+			}
+
+			CoreGraphics.ZoomShape(shapeName, zoomX, zoomY, duracion);
 			return this;
 		}
 
