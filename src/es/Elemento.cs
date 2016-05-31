@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,14 +33,13 @@ namespace Logo
 			set { Shapes.SetOpacity(shapeName, value); }
 		}
 
-		public Elemento Esperar()
+		public Task<Elemento> Terminar()
 		{
-			continuation = false;
-			Task.WaitAll(animations.ToArray());
-			return this;
+			return Task.WhenAll(animations.ToArray())
+				.ContinueWith(t => this);
 		}
 
-		public Elemento Continuar()
+		public Elemento Esperar()
 		{
 			continuation = true;
 			return this;
@@ -61,6 +61,13 @@ namespace Logo
 		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde mover el elemento.</param>
 		public Elemento Mover(double? x = null, double? y = null, double? duracion = null)
 		{
+			if (x == null && y == null)
+			{
+				// If no args were provided, do something anyway by default
+				x = Shapes.GetLeft(shapeName) + 100;
+				y = Shapes.GetTop(shapeName) + 100;
+			}
+
 			return PushAnimation(CoreGraphics.MoveShape(shapeName, x, y, duracion));
 		}
 
@@ -98,8 +105,15 @@ namespace Logo
 		/// </summary>
 		/// <param name="zoomX">Factor de zoom para el eje horizontal (izquierda/derecha).</param>
 		/// <param name="zoomY">Factor de zoom para el eje vertical (arriba/abajo).</param>
-		public Elemento Zoom(double zoomX = 2, double zoomY = 2, double? duracion = null)
+		public Elemento Zoom(double? zoomX, double? zoomY, double? duracion = null)
 		{
+			if (zoomX == null && zoomY == null)
+			{
+				// Do somthing if no values were provided at all.
+				zoomX = 2;
+				zoomY = 2;
+			}
+
 			return PushAnimation(CoreGraphics.ZoomShape(shapeName, zoomX, zoomY, duracion));
 		}
 

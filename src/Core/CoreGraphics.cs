@@ -157,16 +157,16 @@ namespace Logo
 			}
 		}
 
-		public static Task ZoomShape(string shapeName, double scaleX, double scaleY, double? duration)
+		public static Task ZoomShape(string shapeName, double? scaleX, double? scaleY, double? duration)
 		{
 			if (duration == null)
 			{
-				Shapes.Zoom(shapeName, scaleX, scaleY);
+				Shapes.Zoom(shapeName, scaleX ?? 1, scaleY ?? 1);
 			}
 			else
 			{
-				scaleX = System.Math.Min(System.Math.Max(scaleX, 0.1), 20.0);
-				scaleY = System.Math.Min(System.Math.Max(scaleY, 0.1), 20.0);
+				scaleX = System.Math.Min(System.Math.Max(scaleX ?? 1, 0.1), 20.0);
+				scaleY = System.Math.Min(System.Math.Max(scaleY ?? 1, 0.1), 20.0);
 
 				var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
 				if (element != null)
@@ -181,8 +181,8 @@ namespace Logo
 
 						((TransformGroup)element.RenderTransform).Children.Add(transform);
 						return Task.WhenAll(
-							Animate(transform, ScaleTransform.ScaleXProperty, scaleX, duration.Value),
-							Animate(transform, ScaleTransform.ScaleYProperty, scaleY, duration.Value));
+							Animate(transform, ScaleTransform.ScaleXProperty, scaleX ?? 1, duration.Value),
+							Animate(transform, ScaleTransform.ScaleYProperty, scaleY ?? 1, duration.Value));
 					});
 				}
 			}
@@ -238,12 +238,18 @@ namespace Logo
 			if (double.IsNaN(initialValue))
 				initialValue = 0.0;
 
-			return element.BeginAnimationAsync(property, 
-				new DoubleAnimation(initialValue, newValue, new Duration(TimeSpan.FromMilliseconds(duration)))
-				{
-					FillBehavior = FillBehavior.HoldEnd,
-					DecelerationRatio = 0.2
-				});
+			var animation = new DoubleAnimation(initialValue, newValue, new Duration(TimeSpan.FromMilliseconds(duration)))
+			{
+				FillBehavior = FillBehavior.HoldEnd,
+				DecelerationRatio = 0.2
+			};
+
+			var storyboard = new Storyboard();
+			storyboard.Children.Add(animation);
+			Storyboard.SetTarget(animation, element);
+			Storyboard.SetTargetProperty(animation, new PropertyPath(property));
+
+			return storyboard.BeginAsync();
 		}
 
 		static string Draw(bool fill, Func<string> operation, Color? color)

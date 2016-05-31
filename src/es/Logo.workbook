@@ -19,12 +19,15 @@ Pantalla.Limpiar();
 ```
 
 ```csharp
-Pintar
-	.Rectangulo(100, 100, 100, 300)
-	.Rotar(angulo: 360, duracion: 1500)
-	//.Esperar()
-	.Zoom(zoomX: 5, zoomY: 5, duracion: 1500)
-	//.Continuar()
-	.Ocultar(duracion: 3000);
+Pintar.Triangulo().Mover(duracion: 1000).Mover(duracion: 500);
 ```
 
+```csharp
+await Pintar
+	.Rectangulo(100, 100, 100, 300)
+	.Mover(x: 150, y: 150, duracion: 1500)
+	.Esperar()
+	.Mover(x: 500, y: 500, duracion: 1500)
+	.Ocultar(duracion: 2000)
+	.Terminar();
+```

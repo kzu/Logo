@@ -13,6 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)GridLines.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreGraphics.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storyboard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StoryboardExtensions.cs" />
   </ItemGroup>
 </Project>
