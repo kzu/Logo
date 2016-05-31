@@ -9,7 +9,7 @@
     <Import_RootNamespace>Logo</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)DispatcherExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GridLines.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreGraphics.cs" />

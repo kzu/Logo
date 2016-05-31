@@ -19,15 +19,24 @@ Pantalla.Limpiar();
 ```
 
 ```csharp
-Pintar.Triangulo().Mover(duracion: 1000).Mover(duracion: 500);
+// Pintar.Triangulo().Mover(duracion: 1000).Mover(duracion: 500);
 ```
 
 ```csharp
+Pantalla.Limpiar();
+Pantalla.MostrarGrilla();
 await Pintar
 	.Rectangulo(100, 100, 100, 300)
-	.Mover(x: 150, y: 150, duracion: 1500)
-	.Esperar()
-	.Mover(x: 500, y: 500, duracion: 1500)
-	.Ocultar(duracion: 2000)
+	.Mover(x: 250, duracion: 1500)
+	//.Rotar(duracion:1500)
+	//.Mover(duracion: 1500)
+	//.Ocultar(duracion: 1500)
+	//.Mostrar(duracion: 1500)
 	.Terminar();
+	//.Mover(x: 500, y: 500, duracion: 1500)
+	//.Ocultar(duracion: 2000)
+	//.Terminar();
+
+Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
 ```
+

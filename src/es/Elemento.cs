@@ -13,8 +13,7 @@ namespace Logo
 	/// </summary>
 	public class Elemento
 	{
-		Stack<Task> animations = new Stack<Task>();
-		bool continuation;
+		Task animation = Task.FromResult(true);
 		string shapeName;
 
 		internal Elemento(string shapeName)
@@ -35,14 +34,7 @@ namespace Logo
 
 		public Task<Elemento> Terminar()
 		{
-			return Task.WhenAll(animations.ToArray())
-				.ContinueWith(t => this);
-		}
-
-		public Elemento Esperar()
-		{
-			continuation = true;
-			return this;
+			return animation.ContinueWith(t => this);
 		}
 
 		/// <summary>
@@ -59,7 +51,7 @@ namespace Logo
 		/// </summary>
 		/// <param name="x">Posicion en el eje horizontal (izquierda/derecha) donde mover el elemento.</param>
 		/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde mover el elemento.</param>
-		public Elemento Mover(double? x = null, double? y = null, double? duracion = null)
+		public Elemento Mover(double? x = null, double? y = null, int? duracion = null)
 		{
 			if (x == null && y == null)
 			{
@@ -75,7 +67,7 @@ namespace Logo
 		/// Muestra el elemento, opcionalmente utilizado una animacion desde 
 		/// el valor actual de <see cref="Transparencia"/> al maximo de 100.
 		/// </summary>
-		public Elemento Mostrar(double? duracion = null)
+		public Elemento Mostrar(int? duracion = null)
 		{
 			return PushAnimation(CoreGraphics.ShowShape(shapeName, duracion));
 		}
@@ -84,7 +76,7 @@ namespace Logo
 		/// Oculta el elemento, opcionalmente utilizado una animacion desde 
 		/// el valor actual de <see cref="Transparencia"/> al minimo de 0.
 		/// </summary>
-		public Elemento Ocultar(double? duracion = null)
+		public Elemento Ocultar(int? duracion = null)
 		{
 			return PushAnimation(CoreGraphics.HideShape(shapeName, duracion));
 		}
@@ -94,7 +86,7 @@ namespace Logo
 		/// dura el tiempo especificado en milisegundos.
 		/// </summary>
 		/// <param name="angulo">Ángulo de rotación.</param>
-		public Elemento Rotar(double angulo = 90, double? duracion = null)
+		public Elemento Rotar(double angulo = 90, int? duracion = null)
 		{
 			return PushAnimation(CoreGraphics.RotateShape(shapeName, angulo, duracion));
 		}
@@ -105,7 +97,7 @@ namespace Logo
 		/// </summary>
 		/// <param name="zoomX">Factor de zoom para el eje horizontal (izquierda/derecha).</param>
 		/// <param name="zoomY">Factor de zoom para el eje vertical (arriba/abajo).</param>
-		public Elemento Zoom(double? zoomX, double? zoomY, double? duracion = null)
+		public Elemento Zoom(double? zoomX, double? zoomY, int? duracion = null)
 		{
 			if (zoomX == null && zoomY == null)
 			{
@@ -119,19 +111,7 @@ namespace Logo
 
 		Elemento PushAnimation(Task animation)
 		{
-			if (continuation)
-			{
-				continuation = false;
-				if (animations.Count > 0)
-					animations.Push(animations.Pop().ContinueWith(async (t) => await animation));
-				else
-					animations.Push(animation);
-			}
-			else
-			{
-				animations.Push(animation);
-			}
-
+			animation = animation.ContinueWith(async t => await animation);
 			return this;
 		}
 

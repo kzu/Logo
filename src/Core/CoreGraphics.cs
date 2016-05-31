@@ -72,7 +72,7 @@ namespace Logo
 			return Draw(fill, () => Shapes.AddTriangle(x1, y1, x2, y2, x3, y3), color);
 		}
 
-		public static Task AnimateShape(string shapeName, DependencyProperty property, double value, double duration)
+		public static Task AnimateShape(string shapeName, DependencyProperty property, double value, int duration)
 		{
 			var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
 			if (element != null)
@@ -81,29 +81,59 @@ namespace Logo
 			return done;
 		}
 
-		public static Task MoveShape(string shapeName, double? x, double? y, double? duration)
+		public static Task MoveShape(string shapeName, double? x, double? y, int? duration)
 		{
 			if (duration == null)
 			{
 				Shapes.Move(shapeName,
 					x.GetValueOrDefault(Shapes.GetLeft(shapeName)),
 					y.GetValueOrDefault(Shapes.GetTop(shapeName)));
-
-				return done;
 			}
 			else
 			{
-				var tasks = new List<Task>();
-				if (x != null)
-					tasks.Add(AnimateShape(shapeName, Canvas.LeftProperty, x.Value, duration.Value));
-				if (y != null)
-					tasks.Add(AnimateShape(shapeName, Canvas.TopProperty, y.Value, duration.Value));
+				var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
+				if (element != null)
+				{
+					var tasks = new List<Task>();
+					var time = new Duration(TimeSpan.FromMilliseconds(duration.Value));
+					if (x != null)
+					{
+						var initialValue = (double)element.GetValue(Canvas.LeftProperty);
+						if (double.IsNaN(initialValue))
+							initialValue = 0.0;
 
-				return Task.WhenAll(tasks);
+						var animation = new DoubleAnimation(initialValue, x.Value, time)
+						{
+							FillBehavior = FillBehavior.HoldEnd,
+							DecelerationRatio = 0.2
+						};
+
+						tasks.Add(element.BeginAnimationAsync(Canvas.LeftProperty, animation));
+					}
+
+					if (y != null)
+					{
+						var initialValue = (double)element.GetValue(Canvas.TopProperty);
+						if (double.IsNaN(initialValue))
+							initialValue = 0.0;
+
+						var animation = new DoubleAnimation(initialValue, y.Value, time)
+						{
+							FillBehavior = FillBehavior.HoldEnd,
+							DecelerationRatio = 0.2
+						};
+
+						tasks.Add(element.BeginAnimationAsync(Canvas.LeftProperty, animation));
+					}
+
+					return Task.WhenAll(tasks.ToArray());
+				}
 			}
+
+			return done;
 		}
 
-		public static Task HideShape(string shapeName, double? duration)
+		public static Task HideShape(string shapeName, int? duration)
 		{
 			if (duration == null)
 			{
@@ -116,7 +146,7 @@ namespace Logo
 			}
 		}
 
-		public static Task RotateShape(string shapeName, double angle, double? duration)
+		public static Task RotateShape(string shapeName, double angle, int? duration)
 		{
 			if (duration == null)
 			{
@@ -134,9 +164,14 @@ namespace Logo
 							CenterX = element.ActualWidth / 2.0,
 							CenterY = element.ActualHeight / 2.0,
 						};
-
+						
 						((TransformGroup)element.RenderTransform).Children.Add(transform);
-						return Animate(transform, RotateTransform.AngleProperty, angle, duration.Value);
+						return transform.BeginAnimationAsync(RotateTransform.AngleProperty, 
+							new DoubleAnimation(angle, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
+							{
+								FillBehavior = FillBehavior.HoldEnd,
+								DecelerationRatio = 0.2
+							});
 					});
 				}
 			}
@@ -144,7 +179,7 @@ namespace Logo
 			return done;
 		}
 
-		public static Task ShowShape(string shapeName, double? duration)
+		public static Task ShowShape(string shapeName, int? duration)
 		{
 			if (duration == null)
 			{
@@ -157,7 +192,7 @@ namespace Logo
 			}
 		}
 
-		public static Task ZoomShape(string shapeName, double? scaleX, double? scaleY, double? duration)
+		public static Task ZoomShape(string shapeName, double? scaleX, double? scaleY, int? duration)
 		{
 			if (duration == null)
 			{
@@ -180,9 +215,20 @@ namespace Logo
 						};
 
 						((TransformGroup)element.RenderTransform).Children.Add(transform);
+
 						return Task.WhenAll(
-							Animate(transform, ScaleTransform.ScaleXProperty, scaleX ?? 1, duration.Value),
-							Animate(transform, ScaleTransform.ScaleYProperty, scaleY ?? 1, duration.Value));
+							transform.BeginAnimationAsync(ScaleTransform.ScaleXProperty,
+								new DoubleAnimation(scaleX ?? 1, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
+								{
+									FillBehavior = FillBehavior.HoldEnd,
+									DecelerationRatio = 0.2
+								}),
+							transform.BeginAnimationAsync(ScaleTransform.ScaleYProperty,
+								new DoubleAnimation(scaleY ?? 1, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
+								{
+									FillBehavior = FillBehavior.HoldEnd,
+									DecelerationRatio = 0.2
+								}));
 					});
 				}
 			}
@@ -231,7 +277,7 @@ namespace Logo
 			NativeMethods.ShowWindow(graphics, NativeMethods.SW_SHOWNOACTIVATE);
 		}
 
-		static Task Animate<T>(T element, DependencyProperty property, double newValue, double duration)
+		static Task Animate<T>(T element, DependencyProperty property, double newValue, int duration)
 			where T : DependencyObject, IAnimatable
 		{
 			var initialValue = (double)element.GetValue(property);
@@ -244,12 +290,11 @@ namespace Logo
 				DecelerationRatio = 0.2
 			};
 
-			var storyboard = new Storyboard();
-			storyboard.Children.Add(animation);
-			Storyboard.SetTarget(animation, element);
-			Storyboard.SetTargetProperty(animation, new PropertyPath(property));
+			var tcs = new TaskCompletionSource<object>();
+			animation.Completed += (s, e) => tcs.SetResult(null);
+			element.BeginAnimation(property, animation, HandoffBehavior.Compose);
 
-			return storyboard.BeginAsync();
+			return tcs.Task;
 		}
 
 		static string Draw(bool fill, Func<string> operation, Color? color)
@@ -291,20 +336,32 @@ namespace Logo
 				.Select(p => p.MainWindowHandle)
 				.First();
 
+			//NativeMethods.ShowWindow(workbook, NativeMethods.SW_SHOWNOACTIVATE);
+			// NativeMethods.MoveWindow(workbook, 0, 0, screenWidth / 2, screenHeight, true);
+
 			var graphics = System.Windows.Application.Current.Windows.OfType<Window>()
 				.Where(w => w.Title == GraphicsWindow.Title)
-				.First();
+				.FirstOrDefault();
+
+			while (graphics == null)
+			{
+				graphics = System.Windows.Application.Current.Windows.OfType<Window>()
+					.Where(w => w.Title == GraphicsWindow.Title)
+					.FirstOrDefault();
+			}
+
 			graphics.Show();
 			graphics.Topmost = true;
 			graphics.Activate();
+			graphics.Top = 0;
+			graphics.Left = screenWidth / 2;
+			graphics.Width = screenWidth / 2;
+			graphics.Height = screenHeight;
 
 			//SendKeys.KeyDown(System.Windows.Forms.Keys.LWin);
 			//SendKeys.KeyDown(System.Windows.Forms.Keys.Right);
 			//SendKeys.KeyUp(System.Windows.Forms.Keys.Right);
 			//SendKeys.KeyUp(System.Windows.Forms.Keys.LWin);
-
-			//NativeMethods.ShowWindow(workbook, NativeMethods.SW_SHOWNOACTIVATE);
-			//NativeMethods.MoveWindow(workbook, 0, 0, screenWidth / 2, screenHeight, true);
 
 			//var graphics = System.Windows.Application.Current.Windows.OfType<Window>()
 			//	.Where(w => w.Title == GraphicsWindow.Title)
