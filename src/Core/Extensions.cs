@@ -9,8 +9,8 @@ using System.Windows.Threading;
 
 namespace Logo
 {
-    static class Extensions
-    {
+	static class Extensions
+	{
 		public static DispatcherOperation BeginInvoke(this Dispatcher dispatcher, Action action)
 		{
 			return dispatcher.BeginInvoke((Delegate)action);
@@ -21,23 +21,27 @@ namespace Logo
 			return dispatcher.BeginInvoke(priority, (Delegate)action);
 		}
 
-		public static Task BeginAnimationAsync<T>(this T target, DependencyProperty property, AnimationTimeline animation, HandoffBehavior handoffBehavior = HandoffBehavior.Compose)
+		public static void BeginAnimation<T>(this T target, DependencyProperty property, AnimationTimeline animation, HandoffBehavior handoffBehavior = HandoffBehavior.Compose)
 			where T : DispatcherObject, IAnimatable
 		{
-			if (target.Dispatcher.Thread != Thread.CurrentThread)
+			var ev = new ManualResetEvent(false);
+			var timer = new DispatcherTimer
 			{
-				return target.Dispatcher.Invoke(() =>
-				{
-					var source = new TaskCompletionSource<object>();
-					animation.Completed += (s, e) => source.SetResult(null);
-					return source.Task;
-				});
-			}
-			else
+				Interval = animation.Duration.TimeSpan
+			};
+			timer.Tick += (s, e) =>
 			{
-				var source = new TaskCompletionSource<object>();
-				animation.Completed += (s, e) => source.SetResult(null);
-				return source.Task;
+				ev.Set();
+				timer.Stop();
+			};
+
+			timer.Start();
+
+			//animation.Completed += (s, e) => ev.Set();
+			target.BeginAnimation(property, animation, handoffBehavior);
+
+			while (!ev.WaitOne(20))
+			{
 			}
 		}
 	}

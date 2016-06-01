@@ -11,9 +11,14 @@ namespace Logo
 {
 	static class ColorConverter
 	{
-		public static string ToString(Color color)
+		const Color DefaultColor = Color.Azul;
+
+		public static string ToString(Color? color)
 		{
-			switch (color)
+			if (color == null)
+				return null;
+
+			switch (color.Value)
 			{
 				case Color.Blanco:
 					return ToString(NativeColor.White);

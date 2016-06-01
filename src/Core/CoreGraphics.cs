@@ -12,6 +12,8 @@ using System.Reflection;
 using System.Windows.Threading;
 using System.Windows.Media;
 using System.Threading.Tasks;
+using System.Threading;
+using Merq;
 
 namespace Logo
 {
@@ -38,11 +40,17 @@ namespace Logo
 			GridLines = new GridLines(canvas);
 		}
 
+
 		static CoreGraphics Instance { get { return instance; } }
+
+		public static async Task Invoke(Action action)
+		{
+			await Instance.canvas.Dispatcher.InvokeAsync(action, DispatcherPriority.Render);
+		}
 
 		public GridLines GridLines { get; }
 
-		public static string AddEllipse(bool fill, double x, double y, int ancho, int alto, Color? color)
+		public static string AddEllipse(bool fill, double x, double y, int ancho, int alto, string color = null)
 		{
 			return Draw(fill, () =>
 			{
@@ -52,22 +60,22 @@ namespace Logo
 			}, color);
 		}
 
-		public static string AddLine(double x1, double y1, double x2, double y2, Color? color)
+		public static string AddLine(double x1, double y1, double x2, double y2, string color = null)
 		{
 			return Draw(false, () => Shapes.AddLine(x1, y1, x2, y2), color);
 		}
 
-		public static string AddRectangle(bool fill, double x, double y, int ancho, int alto, Color? color)
+		public static string AddRectangle(bool fill, double x, double y, int width, int height, string color = null)
 		{
 			return Draw(fill, () =>
 			{
-				var shapeName = Shapes.AddRectangle(ancho, alto);
+				var shapeName = Shapes.AddRectangle(width, height);
 				Shapes.Move(shapeName, x, y);
 				return shapeName;
 			}, color);
 		}
 
-		public static string AddTriangle(bool fill, double x1, double y1, double x2, double y2, double x3, double y3, Color? color)
+		public static string AddTriangle(bool fill, double x1, double y1, double x2, double y2, double x3, double y3, string color = null)
 		{
 			return Draw(fill, () => Shapes.AddTriangle(x1, y1, x2, y2, x3, y3), color);
 		}
@@ -81,7 +89,7 @@ namespace Logo
 			return done;
 		}
 
-		public static Task MoveShape(string shapeName, double? x, double? y, int? duration)
+		public static async Task MoveShape(string shapeName, double? x, double? y, int? duration)
 		{
 			if (duration == null)
 			{
@@ -108,7 +116,8 @@ namespace Logo
 							DecelerationRatio = 0.2
 						};
 
-						tasks.Add(element.BeginAnimationAsync(Canvas.LeftProperty, animation));
+						tasks.Add(element.Dispatcher
+							.InvokeAsync(() => element.BeginAnimation(Canvas.LeftProperty, animation)).Task);
 					}
 
 					if (y != null)
@@ -123,14 +132,13 @@ namespace Logo
 							DecelerationRatio = 0.2
 						};
 
-						tasks.Add(element.BeginAnimationAsync(Canvas.LeftProperty, animation));
+						tasks.Add(element.Dispatcher.InvokeAsync(() => 
+							Extensions.BeginAnimation(element, Canvas.TopProperty, animation)).Task);
 					}
 
-					return Task.WhenAll(tasks.ToArray());
+					await Task.WhenAll(tasks.ToArray());
 				}
 			}
-
-			return done;
 		}
 
 		public static Task HideShape(string shapeName, int? duration)
@@ -146,7 +154,7 @@ namespace Logo
 			}
 		}
 
-		public static Task RotateShape(string shapeName, double angle, int? duration)
+		public static async Task RotateShape(string shapeName, double angle, int? duration)
 		{
 			if (duration == null)
 			{
@@ -157,26 +165,20 @@ namespace Logo
 				var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
 				if (element != null)
 				{
-					return ApplyTransform(element, e =>
+					var transform = await AddTransform(element, e => new RotateTransform
 					{
-						var transform = new RotateTransform
-						{
-							CenterX = element.ActualWidth / 2.0,
-							CenterY = element.ActualHeight / 2.0,
-						};
-						
-						((TransformGroup)element.RenderTransform).Children.Add(transform);
-						return transform.BeginAnimationAsync(RotateTransform.AngleProperty, 
-							new DoubleAnimation(angle, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
-							{
-								FillBehavior = FillBehavior.HoldEnd,
-								DecelerationRatio = 0.2
-							});
+						CenterX = element.ActualWidth / 2.0,
+						CenterY = element.ActualHeight / 2.0,
 					});
+					
+					await element.Dispatcher.InvokeAsync(() => transform.BeginAnimation(RotateTransform.AngleProperty, 
+						new DoubleAnimation(angle, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
+						{
+							FillBehavior = FillBehavior.HoldEnd,
+							DecelerationRatio = 0.2
+						}));
 				}
 			}
-
-			return done;
 		}
 
 		public static Task ShowShape(string shapeName, int? duration)
@@ -192,7 +194,7 @@ namespace Logo
 			}
 		}
 
-		public static Task ZoomShape(string shapeName, double? scaleX, double? scaleY, int? duration)
+		public static async Task ZoomShape(string shapeName, double? scaleX, double? scaleY, int? duration)
 		{
 			if (duration == null)
 			{
@@ -206,41 +208,35 @@ namespace Logo
 				var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
 				if (element != null)
 				{
-					return ApplyTransform(element, e =>
+					var transform = await AddTransform(element, e => new ScaleTransform
 					{
-						var transform = new ScaleTransform
-						{
-							CenterX = element.ActualWidth / 2.0,
-							CenterY = element.ActualHeight / 2.0,
-						};
-
-						((TransformGroup)element.RenderTransform).Children.Add(transform);
-
-						return Task.WhenAll(
-							transform.BeginAnimationAsync(ScaleTransform.ScaleXProperty,
-								new DoubleAnimation(scaleX ?? 1, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
-								{
-									FillBehavior = FillBehavior.HoldEnd,
-									DecelerationRatio = 0.2
-								}),
-							transform.BeginAnimationAsync(ScaleTransform.ScaleYProperty,
-								new DoubleAnimation(scaleY ?? 1, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
-								{
-									FillBehavior = FillBehavior.HoldEnd,
-									DecelerationRatio = 0.2
-								}));
+						CenterX = element.ActualWidth / 2.0,
+						CenterY = element.ActualHeight / 2.0,
 					});
+
+					await Task.WhenAll(
+						element.Dispatcher.InvokeAsync(() => transform.BeginAnimation(ScaleTransform.ScaleXProperty,
+							new DoubleAnimation(scaleX ?? 1, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
+							{
+								FillBehavior = FillBehavior.HoldEnd,
+								DecelerationRatio = 0.2
+							})).Task,
+						element.Dispatcher.InvokeAsync(() => transform.BeginAnimation(ScaleTransform.ScaleYProperty,
+							new DoubleAnimation(scaleY ?? 1, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
+							{
+								FillBehavior = FillBehavior.HoldEnd,
+								DecelerationRatio = 0.2
+							})).Task);
 				}
 			}
-
-			return done;
 		}
 
-		static Task ApplyTransform(FrameworkElement element, Func<FrameworkElement, Task> transform)
+		static Task<TTransform> AddTransform<TTransform>(FrameworkElement element, Func<FrameworkElement, TTransform> factory)
+			where TTransform : Transform
 		{
-			var tsc = new TaskCompletionSource<Task>();
+			var tsc = new TaskCompletionSource<TTransform>();
 
-			element.Dispatcher.BeginInvoke(() =>
+			element.Dispatcher.Invoke(() =>
 			{
 				if (!(element.RenderTransform is TransformGroup))
 					element.RenderTransform = new TransformGroup();
@@ -253,18 +249,22 @@ namespace Logo
 					handler = (sender, args) =>
 					{
 						element.LayoutUpdated -= handler;
-						tsc.SetResult(transform(element));
+						var transform = factory(element);
+						((TransformGroup)element.RenderTransform).Children.Add(transform);
+						tsc.SetResult(transform);
 					};
 
 					element.LayoutUpdated += handler;
 				}
 				else
 				{
-					tsc.SetResult(transform(element));
+					var transform = factory(element);
+					((TransformGroup)element.RenderTransform).Children.Add(transform);
+					tsc.SetResult(transform);
 				}
 			});
 
-			return tsc.Task.Unwrap();
+			return tsc.Task;
 		}
 
 		public void ShowWindow()
@@ -277,7 +277,7 @@ namespace Logo
 			NativeMethods.ShowWindow(graphics, NativeMethods.SW_SHOWNOACTIVATE);
 		}
 
-		static Task Animate<T>(T element, DependencyProperty property, double newValue, int duration)
+		static async Task Animate<T>(T element, DependencyProperty property, double newValue, int duration)
 			where T : DependencyObject, IAnimatable
 		{
 			var initialValue = (double)element.GetValue(property);
@@ -290,14 +290,10 @@ namespace Logo
 				DecelerationRatio = 0.2
 			};
 
-			var tcs = new TaskCompletionSource<object>();
-			animation.Completed += (s, e) => tcs.SetResult(null);
-			element.BeginAnimation(property, animation, HandoffBehavior.Compose);
-
-			return tcs.Task;
+			await element.Dispatcher.InvokeAsync(() => element.BeginAnimation(property, animation));
 		}
 
-		static string Draw(bool fill, Func<string> operation, Color? color)
+		static string Draw(bool fill, Func<string> operation, string color)
 		{
 			var brush = GraphicsWindow.BrushColor;
 			var pen = GraphicsWindow.PenColor;
@@ -306,7 +302,7 @@ namespace Logo
 				GraphicsWindow.BrushColor = "Transparent";
 				if (color != null)
 				{
-					GraphicsWindow.PenColor = ColorConverter.ToString(color.Value);
+					GraphicsWindow.PenColor = color;
 					if (fill)
 						GraphicsWindow.BrushColor = GraphicsWindow.PenColor;
 				}
@@ -357,6 +353,8 @@ namespace Logo
 			graphics.Left = screenWidth / 2;
 			graphics.Width = screenWidth / 2;
 			graphics.Height = screenHeight;
+
+			//NativeMethods.ShowWindow(new WindowInteropHelper(graphics).Handle, NativeMethods.SW_SHOWNORMAL);
 
 			//SendKeys.KeyDown(System.Windows.Forms.Keys.LWin);
 			//SendKeys.KeyDown(System.Windows.Forms.Keys.Right);
