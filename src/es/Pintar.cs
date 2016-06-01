@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.SmallBasic.Library;
-
-namespace Logo
+﻿namespace Logo
 {
 	/// <summary>
 	/// Permite dibujar formas rellenas (pintadas) en la pantalla.

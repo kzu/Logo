@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SmallBasic.Library;
 
@@ -65,7 +60,8 @@ namespace Logo
 				y = Shapes.GetTop(shapeName) + 100;
 			}
 
-			return PushAnimation(CoreGraphics.Invoke(async () => await CoreGraphics.MoveShape(shapeName, x, y, duracion)));
+			CoreGraphics.MoveShape(shapeName, x, y, duracion);
+			return this;
 		}
 
 		/// <summary>
@@ -74,7 +70,8 @@ namespace Logo
 		/// </summary>
 		public Elemento Mostrar(int? duracion = null)
 		{
-			return PushAnimation(CoreGraphics.Invoke(async () => await CoreGraphics.ShowShape(shapeName, duracion)));
+			CoreGraphics.ShowShape(shapeName, duracion);
+			return this;
 		}
 
 		/// <summary>
@@ -83,7 +80,8 @@ namespace Logo
 		/// </summary>
 		public Elemento Ocultar(int? duracion = null)
 		{
-			return PushAnimation(CoreGraphics.Invoke(async () => await CoreGraphics.HideShape(shapeName, duracion)));
+			CoreGraphics.HideShape(shapeName, duracion);
+			return this;
 		}
 
 		/// <summary>
@@ -93,7 +91,8 @@ namespace Logo
 		/// <param name="angulo">Ángulo de rotación.</param>
 		public Elemento Rotar(double angulo = 90, int? duracion = null)
 		{
-			return PushAnimation(CoreGraphics.Invoke(async () => await CoreGraphics.RotateShape(shapeName, angulo, duracion)));
+			CoreGraphics.RotateShape(shapeName, angulo, duracion);
+			return this;
 		}
 
 		/// <summary>
@@ -106,17 +105,12 @@ namespace Logo
 		{
 			if (zoomX == null && zoomY == null)
 			{
-				// Do somthing if no values were provided at all.
+				// Do something even if no values were provided at all.
 				zoomX = 2;
 				zoomY = 2;
 			}
 
-			return PushAnimation(CoreGraphics.Invoke(async () => await CoreGraphics.ZoomShape(shapeName, zoomX, zoomY, duracion)));
-		}
-
-		Elemento PushAnimation(Task animation)
-		{
-			animation = animation.ContinueWith(async t => await animation);
+			CoreGraphics.ZoomShape(shapeName, zoomX, zoomY, duracion);
 			return this;
 		}
 

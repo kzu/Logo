@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logo", "Logo.csproj", "{236
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Core", "..\Core\Core.shproj", "{0B179C0D-A457-4DC3-9377-7CE9AAB309B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "..\Test\Test.csproj", "{A6AE494C-CFF7-437B-AE9F-3DA28A4E8570}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Core\Core.projitems*{0b179c0d-a457-4dc3-9377-7ce9aab309b2}*SharedItemsImports = 13
@@ -21,6 +23,10 @@ Global
 		{236FE250-519C-4D76-BF84-94D4AD5FE154}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{236FE250-519C-4D76-BF84-94D4AD5FE154}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{236FE250-519C-4D76-BF84-94D4AD5FE154}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6AE494C-CFF7-437B-AE9F-3DA28A4E8570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6AE494C-CFF7-437B-AE9F-3DA28A4E8570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6AE494C-CFF7-437B-AE9F-3DA28A4E8570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6AE494C-CFF7-437B-AE9F-3DA28A4E8570}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

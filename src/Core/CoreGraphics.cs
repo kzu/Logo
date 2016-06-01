@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Windows;
 using Microsoft.SmallBasic.Library;
 using System.Linq;
@@ -13,7 +12,6 @@ using System.Windows.Threading;
 using System.Windows.Media;
 using System.Threading.Tasks;
 using System.Threading;
-using Merq;
 
 namespace Logo
 {
@@ -22,7 +20,6 @@ namespace Logo
 		static readonly FieldInfo canvasField = typeof(GraphicsWindow).GetFields(BindingFlags.Static | BindingFlags.NonPublic)
 				.FirstOrDefault(f => f.FieldType == typeof(Canvas));
 
-		static readonly Task done = Task.FromResult(true);
 		static CoreGraphics instance;
 		Canvas canvas;
 
@@ -43,12 +40,39 @@ namespace Logo
 
 		static CoreGraphics Instance { get { return instance; } }
 
-		public static async Task Invoke(Action action)
-		{
-			await Instance.canvas.Dispatcher.InvokeAsync(action, DispatcherPriority.Render);
-		}
-
 		public GridLines GridLines { get; }
+
+		static void Invoke(Action action, TimeSpan wait)
+		{
+			// This basically copies the behavior of the Turtle in 
+			// its Move operations and the WaitForReturn method.
+			var evt = new AutoResetEvent(false);
+			Instance.canvas.Dispatcher.Invoke(() =>
+			{
+				var dt = new DispatcherTimer { Interval = wait };
+				dt.Tick += (s, e) =>
+				{
+					evt.Set();
+					dt.Stop();
+				};
+				dt.Start();
+			});
+
+			var millisecondsTimeout = 100;
+			if (Instance.canvas.Dispatcher.CheckAccess())
+				millisecondsTimeout = 10;
+
+			Instance.canvas.Dispatcher.Invoke(action);
+
+			while (!evt.WaitOne(millisecondsTimeout))
+			{
+				try
+				{
+					Instance.canvas.Dispatcher.Invoke(() => { }, DispatcherPriority.Background);
+				}
+				catch { }
+			}
+		}
 
 		public static string AddEllipse(bool fill, double x, double y, int ancho, int alto, string color = null)
 		{
@@ -74,22 +98,63 @@ namespace Logo
 				return shapeName;
 			}, color);
 		}
+		public static void ShowShape(string shapeName, int? duration)
+		{
+			if (duration == null)
+				Shapes.ShowShape(shapeName);
+			else
+				AnimateShape(shapeName, UIElement.OpacityProperty, 1, duration.Value);
+		}
+
 
 		public static string AddTriangle(bool fill, double x1, double y1, double x2, double y2, double x3, double y3, string color = null)
 		{
 			return Draw(fill, () => Shapes.AddTriangle(x1, y1, x2, y2, x3, y3), color);
 		}
 
-		public static Task AnimateShape(string shapeName, DependencyProperty property, double value, int duration)
+		public static void AnimateShape(string shapeName, DependencyProperty property, double value, int duration)
 		{
 			var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
 			if (element != null)
-				return Animate(element, property, value, duration);
-
-			return done;
+				Animate(element, property, value, duration);
 		}
 
-		public static async Task MoveShape(string shapeName, double? x, double? y, int? duration)
+		public static void HideShape(string shapeName, int? duration)
+		{
+			if (duration == null)
+				Shapes.HideShape(shapeName);
+			else
+				AnimateShape(shapeName, UIElement.OpacityProperty, 0, duration.Value);
+		}
+
+		public static void RotateShape(string shapeName, double angle, int? duration)
+		{
+			if (duration == null)
+			{
+				Shapes.Rotate(shapeName, angle);
+			}
+			else
+			{
+				var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
+				if (element != null)
+				{
+					var transform = AddTransform(element, e => new RotateTransform
+					{
+						CenterX = element.ActualWidth / 2.0,
+						CenterY = element.ActualHeight / 2.0,
+					});
+
+					Invoke(() => transform.BeginAnimation(RotateTransform.AngleProperty,
+						new DoubleAnimation(angle, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
+						{
+							FillBehavior = FillBehavior.HoldEnd,
+							DecelerationRatio = 0.2
+						}), TimeSpan.FromMilliseconds(duration.Value));
+				}
+			}
+		}
+
+		public static void MoveShape(string shapeName, double? x, double? y, int? duration)
 		{
 			if (duration == null)
 			{
@@ -102,7 +167,7 @@ namespace Logo
 				var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
 				if (element != null)
 				{
-					var tasks = new List<Task>();
+					var storyboard = new Storyboard();
 					var time = new Duration(TimeSpan.FromMilliseconds(duration.Value));
 					if (x != null)
 					{
@@ -116,8 +181,9 @@ namespace Logo
 							DecelerationRatio = 0.2
 						};
 
-						tasks.Add(element.Dispatcher
-							.InvokeAsync(() => element.BeginAnimation(Canvas.LeftProperty, animation)).Task);
+						Storyboard.SetTarget(animation, element);
+						Storyboard.SetTargetProperty(animation, new PropertyPath(Canvas.LeftProperty));
+						storyboard.Children.Add(animation);
 					}
 
 					if (y != null)
@@ -132,69 +198,18 @@ namespace Logo
 							DecelerationRatio = 0.2
 						};
 
-						tasks.Add(element.Dispatcher.InvokeAsync(() => 
-							Extensions.BeginAnimation(element, Canvas.TopProperty, animation)).Task);
+						Storyboard.SetTarget(animation, element);
+						Storyboard.SetTargetProperty(animation, new PropertyPath(Canvas.TopProperty));
+						storyboard.Children.Add(animation);
 					}
 
-					await Task.WhenAll(tasks.ToArray());
+					if (x != null || y != null)
+						Invoke(() => storyboard.Begin(element), time.TimeSpan);
 				}
 			}
 		}
 
-		public static Task HideShape(string shapeName, int? duration)
-		{
-			if (duration == null)
-			{
-				Shapes.HideShape(shapeName);
-				return done;
-			}
-			else
-			{
-				return AnimateShape(shapeName, UIElement.OpacityProperty, 0, duration.Value);
-			}
-		}
-
-		public static async Task RotateShape(string shapeName, double angle, int? duration)
-		{
-			if (duration == null)
-			{
-				Shapes.Rotate(shapeName, angle);
-			}
-			else
-			{
-				var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
-				if (element != null)
-				{
-					var transform = await AddTransform(element, e => new RotateTransform
-					{
-						CenterX = element.ActualWidth / 2.0,
-						CenterY = element.ActualHeight / 2.0,
-					});
-					
-					await element.Dispatcher.InvokeAsync(() => transform.BeginAnimation(RotateTransform.AngleProperty, 
-						new DoubleAnimation(angle, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
-						{
-							FillBehavior = FillBehavior.HoldEnd,
-							DecelerationRatio = 0.2
-						}));
-				}
-			}
-		}
-
-		public static Task ShowShape(string shapeName, int? duration)
-		{
-			if (duration == null)
-			{
-				Shapes.ShowShape(shapeName);
-				return done;
-			}
-			else
-			{
-				return AnimateShape(shapeName, UIElement.OpacityProperty, 1, duration.Value);
-			}
-		}
-
-		public static async Task ZoomShape(string shapeName, double? scaleX, double? scaleY, int? duration)
+		public static void ZoomShape(string shapeName, double? scaleX, double? scaleY, int? duration)
 		{
 			if (duration == null)
 			{
@@ -208,63 +223,80 @@ namespace Logo
 				var element = Instance.canvas.Children.OfType<FrameworkElement>().FirstOrDefault(e => e.Name == shapeName);
 				if (element != null)
 				{
-					var transform = await AddTransform(element, e => new ScaleTransform
+					var time = TimeSpan.FromMilliseconds(duration.Value);
+					var transform = AddTransform(element, e => new ScaleTransform
 					{
 						CenterX = element.ActualWidth / 2.0,
 						CenterY = element.ActualHeight / 2.0,
 					});
 
-					await Task.WhenAll(
-						element.Dispatcher.InvokeAsync(() => transform.BeginAnimation(ScaleTransform.ScaleXProperty,
-							new DoubleAnimation(scaleX ?? 1, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
-							{
-								FillBehavior = FillBehavior.HoldEnd,
-								DecelerationRatio = 0.2
-							})).Task,
-						element.Dispatcher.InvokeAsync(() => transform.BeginAnimation(ScaleTransform.ScaleYProperty,
-							new DoubleAnimation(scaleY ?? 1, new Duration(TimeSpan.FromMilliseconds(duration.Value)))
-							{
-								FillBehavior = FillBehavior.HoldEnd,
-								DecelerationRatio = 0.2
-							})).Task);
+					Invoke(() =>
+					{
+						if (scaleX != null)
+							transform.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(scaleX.Value, new Duration(time))
+								{
+									FillBehavior = FillBehavior.HoldEnd,
+									DecelerationRatio = 0.2
+								});
+						if (scaleY != null)
+							transform.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(scaleY ?? 1, new Duration(time))
+								{
+									FillBehavior = FillBehavior.HoldEnd,
+									DecelerationRatio = 0.2
+								});
+					}, time);
 				}
 			}
 		}
 
-		static Task<TTransform> AddTransform<TTransform>(FrameworkElement element, Func<FrameworkElement, TTransform> factory)
+		static TTransform AddTransform<TTransform>(FrameworkElement element, Func<FrameworkElement, TTransform> factory)
 			where TTransform : Transform
 		{
-			var tsc = new TaskCompletionSource<TTransform>();
-
-			element.Dispatcher.Invoke(() =>
+			return element.Dispatcher.Invoke(() =>
 			{
 				if (!(element.RenderTransform is TransformGroup))
 					element.RenderTransform = new TransformGroup();
 
 				if (element.ActualHeight == 0 && element.ActualWidth == 0)
 				{
+					var evt = new AutoResetEvent(false);
+
 					// Layout may not have happened yet, so we need to schedule the transform 
 					// operation on the layout event.
 					EventHandler handler = null;
+					TTransform transform = default(TTransform);
 					handler = (sender, args) =>
 					{
 						element.LayoutUpdated -= handler;
-						var transform = factory(element);
+						transform = factory(element);
 						((TransformGroup)element.RenderTransform).Children.Add(transform);
-						tsc.SetResult(transform);
+						evt.Set();
 					};
 
 					element.LayoutUpdated += handler;
+
+					var millisecondsTimeout = 100;
+					if (element.Dispatcher.CheckAccess())
+						millisecondsTimeout = 10;
+
+					while (!evt.WaitOne(millisecondsTimeout))
+					{
+						try
+						{
+							element.Dispatcher.Invoke(() => { }, DispatcherPriority.Background);
+						}
+						catch { }
+					}
+
+					return transform;
 				}
 				else
 				{
 					var transform = factory(element);
 					((TransformGroup)element.RenderTransform).Children.Add(transform);
-					tsc.SetResult(transform);
+					return transform;
 				}
 			});
-
-			return tsc.Task;
 		}
 
 		public void ShowWindow()
@@ -272,12 +304,13 @@ namespace Logo
 			var graphics = System.Windows.Application.Current.Windows.OfType<Window>()
 				.Where(w => w.Title == GraphicsWindow.Title)
 				.Select(w => new WindowInteropHelper(w).Handle)
-				.First();
+				.FirstOrDefault();
 
-			NativeMethods.ShowWindow(graphics, NativeMethods.SW_SHOWNOACTIVATE);
+			if (graphics != null)
+				NativeMethods.ShowWindow(graphics, NativeMethods.ShowWindowCommands.ShowNoActivate);
 		}
 
-		static async Task Animate<T>(T element, DependencyProperty property, double newValue, int duration)
+		static void Animate<T>(T element, DependencyProperty property, double newValue, int duration)
 			where T : DependencyObject, IAnimatable
 		{
 			var initialValue = (double)element.GetValue(property);
@@ -290,7 +323,7 @@ namespace Logo
 				DecelerationRatio = 0.2
 			};
 
-			await element.Dispatcher.InvokeAsync(() => element.BeginAnimation(property, animation));
+			Invoke(() => element.BeginAnimation(property, animation), animation.Duration.TimeSpan);
 		}
 
 		static string Draw(bool fill, Func<string> operation, string color)
@@ -327,10 +360,10 @@ namespace Logo
 			var screenWidth = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width;
 			var screenHeight = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
 
-			var workbook = Process.GetProcesses()
-				.Where(p => p.MainWindowTitle.Contains("Workbook") && !p.MainWindowTitle.Contains("(WPF)"))
-				.Select(p => p.MainWindowHandle)
-				.First();
+			//var workbook = Process.GetProcesses()
+			//	.Where(p => p.MainWindowTitle.Contains("Workbook") && !p.MainWindowTitle.Contains("(WPF)"))
+			//	.Select(p => p.MainWindowHandle)
+			//	.FirstOrDefault();
 
 			//NativeMethods.ShowWindow(workbook, NativeMethods.SW_SHOWNOACTIVATE);
 			// NativeMethods.MoveWindow(workbook, 0, 0, screenWidth / 2, screenHeight, true);
