@@ -6,26 +6,76 @@ packages: []
 
 ```csharp
 #r "bin\Logo.dll"
-#r "bin\SmallBasicLibrary.dll"
 ```
 
+# Bienvenidos a Logo!
+
+Lo primero que vamos a decir en el programa, es que vamos a \
+usar Logo :)
+
 ```csharp
-using Logo;
-using Microsoft.SmallBasic.Library;
+using static Logo;
 ```
+
+Casi todas las instrucciones que le demos a la computadora en este lenguage \
+\(llamado C# o “C Sharp”), deben terminar con un punto y coma al final de la\
+”oración”, lo que le indica al programa que terminamos de completar una \
+instrucción.
+
+Mientras estamos diseñando el programa, es muy util poder mostrar una \
+grilla para saber las coordenadas de la tortuga y los tamaños de las diferentes \
+formas que vamos dibujando:
+
+```csharp
+Pantalla.MostrarGrilla();
+```
+
+Al comienzo del programa, es conveniente también “restablecer” la tortuga, \
+lo que permite ejecutar el mismo programa muchas veces desde el principio\
+y se comporte siempre igual:
 
 ```csharp
 Tortuga.Restablecer();
 ```
 
+En cualquier momento podemos ejecutar una sección de código apretando \
+la combinación de teclas Control \+ Enter (se deja apretada la tecla Control, \
+y seguidamente se aprieta la tecla Enter). 
+
+La `Tortuga` puede efectuar varias operaciones para dibujar. Sólo tenemos \
+que llamarla indicándole qué operación queremos que realize, por ejemplo:
+
 ```csharp
-Pintar.Triangulo(color: Color.Verde).Mover(duracion: 1000).Mover(duracion: 500);
+Tortuga.Mostrar();
+```
+
+Podés probar qué hace esta línea de arriba apretando Control \+ Enter. \
+Algunos ejemplos de lo que puede hacer la tortuga:
+
+```csharp
 Tortuga.Mover(100);
 Tortuga.GirarDerecha();
 ```
 
+También podemos decirle a la tortuga que efecúe varias operaciones continuadas, \
+sin necesidad de volver a escribir la palabra `Tortuga` de nuevo o tener que \
+terminar la oración con el punto y coma `;`, como se ve acá:
+
 ```csharp
-Pantalla.OcultarGrilla();
+Tortuga.Mover(100)
+	.GirarDerecha()
+	.Mover(100)
+	.GirarDerecha()
+	.Mover(100);
+```
+
+Si contaste cuántas veces le dijimos `Mover` a la tortuga y cuántas `GirarDerecha`, \
+quizás hayas adivinado que lo que le dijimos que haga es un cuadrado!\
+Las instrucciones, cuando se “encadenan” o “enganchan” de esta forma, no \
+terminan con el punto y coma `;` hasta que llegamos a la última instrucción.
+
+```csharp
+
 Pintar
 	.Rectangulo(100, 100, 100, 300, Color.Rojo)
 	.Mover(x: 250, y: 250, duracion: 1500)
@@ -38,4 +88,3 @@ Pintar
 
 Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
 ```
-

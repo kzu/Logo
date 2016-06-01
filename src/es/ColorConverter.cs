@@ -1,42 +1,39 @@
 ﻿using System.Drawing;
 using NativeColor = System.Drawing.Color;
 
-namespace Logo
+static class ColorConverter
 {
-	static class ColorConverter
+	const Color DefaultColor = Color.Azul;
+
+	public static string ToString(Color? color)
 	{
-		const Color DefaultColor = Color.Azul;
+		if (color == null)
+			return null;
 
-		public static string ToString(Color? color)
+		switch (color.Value)
 		{
-			if (color == null)
-				return null;
-
-			switch (color.Value)
-			{
-				case Color.Blanco:
-					return ToString(NativeColor.White);
-				case Color.Rojo:
-					return ToString(NativeColor.Red);
-				case Color.Naranja:
-					return ToString(NativeColor.Orange);
-				case Color.Amarillo:
-					return ToString(NativeColor.Yellow);
-				case Color.Verde:
-					return ToString(NativeColor.Green);
-				case Color.Azul:
-					return ToString(NativeColor.Blue);
-				case Color.Indigo:
-					return ToString(NativeColor.Indigo);
-				case Color.Violeta:
-					return ToString(NativeColor.Violet);
-				case Color.Negro:
-				default:
-					return ToString(NativeColor.Black);
-			}
+			case Color.Blanco:
+				return ToString(NativeColor.White);
+			case Color.Rojo:
+				return ToString(NativeColor.Red);
+			case Color.Naranja:
+				return ToString(NativeColor.Orange);
+			case Color.Amarillo:
+				return ToString(NativeColor.Yellow);
+			case Color.Verde:
+				return ToString(NativeColor.Green);
+			case Color.Azul:
+				return ToString(NativeColor.Blue);
+			case Color.Indigo:
+				return ToString(NativeColor.Indigo);
+			case Color.Violeta:
+				return ToString(NativeColor.Violet);
+			case Color.Negro:
+			default:
+				return ToString(NativeColor.Black);
 		}
-
-		static string ToString(NativeColor color) =>
-			ColorTranslator.ToHtml(NativeColor.FromArgb(color.A, color.R, color.G, color.B));
 	}
+
+	static string ToString(NativeColor color) =>
+		ColorTranslator.ToHtml(NativeColor.FromArgb(color.A, color.R, color.G, color.B));
 }
