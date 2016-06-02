@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-using Logo;
-using Microsoft.SmallBasic.Library;
+using static Logo;
 
 namespace Test
 {
@@ -23,27 +22,19 @@ namespace Test
 		/// </summary>
 		void Test()
 		{
+			Repetir(4, () => Tortuga
+				.Mover(100)
+				.GirarDerecha());
 
-			//Pantalla.Mostrar();
-
-			//Turtle.Show();
-
-			//for (int i = 0; i < 4; i++)
-			//{
-			//	Turtle.Move(100);
-			//	Turtle.TurnRight();
-			//}
-
-			Pantalla.Mostrar();
-			Pintar
-				.Rectangulo(100, 100, 100, 300)
-				.Mover(x: 250, y: 250, duracion: 1500)
-				.Rotar(angulo: 180, duracion: 1500)
-				.Mover(duracion: 1500)
-				.Ocultar(duracion: 1500)
-				.Mostrar(duracion: 1500)
-				.Mover(x: 500, y: 500, duracion: 1500)
-				.Ocultar(duracion: 2000);
+			//Pintar
+			//	.Rectangulo(100, 100, 100, 300)
+			//	.Mover(x: 250, y: 250, duracion: 1500)
+			//	.Rotar(angulo: 180, duracion: 1500)
+			//	.Mover(duracion: 1500)
+			//	.Ocultar(duracion: 1500)
+			//	.Mostrar(duracion: 1500)
+			//	.Mover(x: 500, y: 500, duracion: 1500)
+			//	.Ocultar(duracion: 2000);
 
 			Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
 		}
