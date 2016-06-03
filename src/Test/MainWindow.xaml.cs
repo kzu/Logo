@@ -22,9 +22,11 @@ namespace Test
 		/// </summary>
 		void Test()
 		{
-			Repetir(4, () => Tortuga
+			Tortuga.Lapiz.Color = Color.Verde;
+
+			Tortuga
 				.Mover(100)
-				.GirarDerecha());
+				.GirarDerecha();
 
 			//Pintar
 			//	.Rectangulo(100, 100, 100, 300)
@@ -36,7 +38,7 @@ namespace Test
 			//	.Mover(x: 500, y: 500, duracion: 1500)
 			//	.Ocultar(duracion: 2000);
 
-			Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
+			//Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
 		}
 	}
 }

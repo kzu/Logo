@@ -216,7 +216,7 @@ public static partial class Tortuga
 		/// </summary>
 		public static Color Color
 		{
-			set { Lapiz.Color = value; }
+			set { global::Lapiz.Color = value; }
 		}
 
 		/// <summary>
@@ -226,8 +226,8 @@ public static partial class Tortuga
 		/// </summary>
 		public static double Grosor
 		{
-			get { return Lapiz.Grosor; }
-			set { Lapiz.Grosor = value; }
+			get { return global::Lapiz.Grosor; }
+			set { global::Lapiz.Grosor = value; }
 		}
 	}
 
