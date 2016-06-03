@@ -6,6 +6,7 @@ packages: []
 
 ```csharp
 #r "bin\Logo.dll"
+#r "bin\SmallBasicLibrary.dll"
 ```
 
 # Bienvenidos a Logo!
@@ -17,33 +18,23 @@ usar Logo :)
 using static Logo;
 ```
 
-Casi todas las instrucciones que le demos a la computadora en este lenguage \
-\(llamado C# o “C Sharp”), deben terminar con un punto y coma al final de la\
-”oración”, lo que le indica al programa que terminamos de completar una \
-instrucción.
+Casi todas las instrucciones que le demos a la computadora en este lenguage (llamado C# o “C Sharp”), deben terminar con un punto y coma al final de la ”oración”, lo que le indica al programa que terminamos de completar una instrucción.
 
-Mientras estamos diseñando el programa, es muy util poder mostrar una \
-grilla para saber las coordenadas de la tortuga y los tamaños de las diferentes \
-formas que vamos dibujando:
+Mientras estamos diseñando el programa, es muy util poder mostrar una grilla para saber las coordenadas de la tortuga y los tamaños de las diferentes formas que vamos dibujando:
 
 ```csharp
 Pantalla.MostrarGrilla();
 ```
 
-Al comienzo del programa, es conveniente también “restablecer” la tortuga, \
-lo que permite ejecutar el mismo programa muchas veces desde el principio\
-y se comporte siempre igual:
+Al comienzo del programa, es conveniente también “restablecer” la tortuga, lo que permite ejecutar el mismo programa muchas veces desde el principio y se comporte siempre igual:
 
 ```csharp
 Tortuga.Restablecer();
 ```
 
-En cualquier momento podemos ejecutar una sección de código apretando \
-la combinación de teclas Control \+ Enter (se deja apretada la tecla Control, \
-y seguidamente se aprieta la tecla Enter). 
+En cualquier momento podemos ejecutar una sección de código apretando la combinación de teclas Control \+ Enter (se deja apretada la tecla Control, y seguidamente se aprieta la tecla Enter).
 
-La `Tortuga` puede efectuar varias operaciones para dibujar. Sólo tenemos \
-que llamarla indicándole qué operación queremos que realize, por ejemplo:
+La `Tortuga` puede efectuar varias operaciones para dibujar. Sólo tenemos que llamarla indicándole qué operación queremos que realize, por ejemplo:
 
 ```csharp
 Tortuga.Mostrar();
@@ -57,9 +48,7 @@ Tortuga.Mover(100);
 Tortuga.GirarDerecha();
 ```
 
-También podemos decirle a la tortuga que efecúe varias operaciones continuadas, \
-sin necesidad de volver a escribir la palabra `Tortuga` de nuevo o tener que \
-terminar la oración con el punto y coma `;`, como se ve acá:
+También podemos decirle a la tortuga que efecúe varias operaciones continuadas, sin necesidad de volver a escribir la palabra `Tortuga` de nuevo o tener que terminar la oración con el punto y coma `;`, como se ve acá:
 
 ```csharp
 Tortuga.Mover(100)
@@ -69,13 +58,10 @@ Tortuga.Mover(100)
 	.Mover(100);
 ```
 
-Si contaste cuántas veces le dijimos `Mover` a la tortuga y cuántas `GirarDerecha`, \
-quizás hayas adivinado que lo que le dijimos que haga es un cuadrado!\
-Las instrucciones, cuando se “encadenan” o “enganchan” de esta forma, no \
-terminan con el punto y coma `;` hasta que llegamos a la última instrucción.
+Si contaste cuántas veces le dijimos `Mover` a la tortuga y cuántas `GirarDerecha`, quizás hayas adivinado que lo que le dijimos que haga es un cuadrado!\
+Las instrucciones, cuando se “encadenan” o “enganchan” de esta forma, no terminan con el punto y coma `;` hasta que llegamos a la última instrucción.
 
 ```csharp
-
 Pintar
 	.Rectangulo(100, 100, 100, 300, Color.Rojo)
 	.Mover(x: 250, y: 250, duracion: 1500)
@@ -86,5 +72,28 @@ Pintar
 	.Mover(x: 500, y: 500, duracion: 1500)
 	.Ocultar(duracion: 2000);
 
+
+Action linea = () => {
+	Tortuga.Mover(100).GirarDerecha();
+};
+
+Si (true, () => Dibujar.Texto(x: 100, y: 100, texto: "SI!!!"));
+
+Repetir(4, linea);
+
 Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
+```
+
+```csharp
+Pantalla.Borrar();
+Imagen.Mostrar("http://previews.123rf.com/images/Cole123RF/Cole123RF1210/cole123rf121000055/15844679-cute-puppy-cavalier-king-charles-spaniel-puppy-wearing-red-sweater-with-pink-heart--Stock-Photo.jpg")
+	.Mover(0, 0, duracion: 1000)
+	.Zoom(0.2, 0.2, duracion: 1000);
+```
+
+```csharp
+Pantalla.Borrar();
+Dibujar.Triangulo(100, 200, 200, 100, 300, 200, Color.Rojo)
+	.Mover(100, 100, duracion: 1000)
+	.Zoom(2, 2, duracion: 1000);
 ```

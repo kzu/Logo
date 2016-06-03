@@ -99,7 +99,7 @@ public class Elemento
 	/// </summary>
 	/// <param name="zoomX">Factor de zoom para el eje horizontal (izquierda/derecha).</param>
 	/// <param name="zoomY">Factor de zoom para el eje vertical (arriba/abajo).</param>
-	public Elemento Zoom(double? zoomX, double? zoomY, int? duracion = null)
+	public Elemento Zoom(double? zoomX = null, double? zoomY = null, int? duracion = null)
 	{
 		if (zoomX == null && zoomY == null)
 		{

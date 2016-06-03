@@ -17,4 +17,15 @@ public static class Logo
 			accion();
 		}
 	}
+
+	/// <summary>
+	/// Ejecuta una acción si la condición es verdadera.
+	/// </summary>
+	/// <param name="condicion">Condición para ejecutar la acción.</param>
+	/// <param name="accion">Acción a ejecutar.</param>
+	public static void Si (bool condicion, Action accion)
+	{
+		if (condicion)
+			accion ();
+	}
 }

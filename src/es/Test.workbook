@@ -1,0 +1,49 @@
+---
+uti: com.xamarin.workbook
+platform: WPF
+packages: []
+---
+
+```csharp
+#r "bin\Logo.dll"
+#r "bin\SmallBasicLibrary.dll"
+```
+
+```csharp
+using static Logo;
+using Microsoft.SmallBasic.Library;
+```
+
+```csharp
+var url = "http://previews.123rf.com/images/Cole123RF/Cole123RF1210/cole123rf121000055/15844679-cute-puppy-cavalier-king-charles-spaniel-puppy-wearing-red-sweater-with-pink-heart--Stock-Photo.jpg";
+
+var pic = Flickr.GetRandomPicture("mountains, river");
+```
+
+```csharp
+Pantalla.Mostrar();
+
+```
+
+```csharp
+Pantalla.Borrar();
+var image = Shapes.AddImage(pic);
+```
+
+```csharp
+Shapes.Move(image, 100, 100);
+```
+
+```csharp
+var perro = Flickr.GetRandomPicture("casa");
+```
+
+```csharp
+Pantalla.Borrar();
+Imagen.Mostrar(perro).Mover(100, 100);
+```
+
+```csharp
+System.IO.Path.IsPathRooted("http://rojo");
+```
+

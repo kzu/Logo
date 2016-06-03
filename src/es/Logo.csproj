@@ -6,6 +6,7 @@
     <Compile Include="ColorConverter.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="Elemento.cs" />
+    <Compile Include="Imagen.cs" />
     <Compile Include="ITortuga.cs" />
     <Compile Include="Logo.cs" />
     <Compile Include="Pintar.cs" />
