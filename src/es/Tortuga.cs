@@ -191,6 +191,9 @@ public static partial class Tortuga
 		Mostrar();
 	}
 
+	/// <summary>
+	/// Configura las propiedades del lápiz en uso por la tortuga.
+	/// </summary>
 	public static class Lapiz
 	{
 		/// <summary>

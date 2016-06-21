@@ -73,6 +73,11 @@ public static class Dibujar
 	/// <param name="x">Posicion en el eje horizontal (izquierda/derecha) donde comenzar a escribir el texto.</param>
 	/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde comenzar a escribir el texto.</param>
 	/// <param name="texto">Texto a escribir.</param>
+	/// <param name="color">Color a utilizar (opcional).</param>
+	/// <param name="tamañoDeLetra">Tamaño de letra a utilizar (opcional).</param>
+	/// <param name="letraGruesa">Escribir con letra gruesa o "negrita" (opcional).</param>
+	/// <param name="letraCursiva">Escribir con letra cursiva (opcional).</param>
+	/// <param name="tipoDeLetra">Nombre del tipo de letra (opcional).</param>
 	public static Elemento Texto(double x, double y, string texto, Color? color = null, double? tamañoDeLetra = null, bool? letraGruesa = null, bool? letraCursiva = null, string tipoDeLetra = "")
 	{
 		var brush = GraphicsWindow.BrushColor;

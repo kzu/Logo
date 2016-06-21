@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SmallBasic.Library;
 
@@ -7,7 +8,6 @@ using Microsoft.SmallBasic.Library;
 /// </summary>
 public class Elemento
 {
-	Task animation = Task.FromResult(true);
 	string shapeName;
 
 	internal Elemento(string shapeName)
@@ -26,15 +26,6 @@ public class Elemento
 		set { Shapes.SetOpacity(shapeName, value); }
 	}
 
-	public Task<Elemento> Terminar()
-	{
-		return Task.Run(() =>
-		{
-			SpinWait.SpinUntil(() => animation.IsCompleted);
-			return this;
-		});
-	}
-
 	/// <summary>
 	/// Elimina el elemento de la pantalla.
 	/// </summary>
@@ -49,6 +40,10 @@ public class Elemento
 	/// </summary>
 	/// <param name="x">Posicion en el eje horizontal (izquierda/derecha) donde mover el elemento.</param>
 	/// <param name="y">Posicion en el eje vertical (abajo/arriba) donde mover el elemento.</param>
+	/// <param name="duracion">
+	/// Tiempo en que la acción debe terminar (opcional). 
+	/// Si no se provee un valor, la operación es instantánea.
+	/// </param>
 	public Elemento Mover(double? x = null, double? y = null, int? duracion = null)
 	{
 		if (x == null && y == null)
@@ -66,6 +61,10 @@ public class Elemento
 	/// Muestra el elemento, opcionalmente utilizado una animacion desde 
 	/// el valor actual de <see cref="Transparencia"/> al maximo de 100.
 	/// </summary>
+	/// <param name="duracion">
+	/// Tiempo en que la acción debe terminar (opcional). 
+	/// Si no se provee un valor, la operación es instantánea.
+	/// </param>
 	public Elemento Mostrar(int? duracion = null)
 	{
 		CoreGraphics.ShowShape(shapeName, duracion);
@@ -76,6 +75,10 @@ public class Elemento
 	/// Oculta el elemento, opcionalmente utilizado una animacion desde 
 	/// el valor actual de <see cref="Transparencia"/> al minimo de 0.
 	/// </summary>
+	/// <param name="duracion">
+	/// Tiempo en que la acción debe terminar (opcional). 
+	/// Si no se provee un valor, la operación es instantánea.
+	/// </param>
 	public Elemento Ocultar(int? duracion = null)
 	{
 		CoreGraphics.HideShape(shapeName, duracion);
@@ -87,6 +90,10 @@ public class Elemento
 	/// dura el tiempo especificado en milisegundos.
 	/// </summary>
 	/// <param name="angulo">Ángulo de rotación.</param>
+	/// <param name="duracion">
+	/// Tiempo en que la acción debe terminar (opcional). 
+	/// Si no se provee un valor, la operación es instantánea.
+	/// </param>
 	public Elemento Rotar(double angulo = 90, int? duracion = null)
 	{
 		CoreGraphics.RotateShape(shapeName, angulo, duracion);
@@ -99,6 +106,10 @@ public class Elemento
 	/// </summary>
 	/// <param name="zoomX">Factor de zoom para el eje horizontal (izquierda/derecha).</param>
 	/// <param name="zoomY">Factor de zoom para el eje vertical (arriba/abajo).</param>
+	/// <param name="duracion">
+	/// Tiempo en que la acción debe terminar (opcional). 
+	/// Si no se provee un valor, la operación es instantánea.
+	/// </param>
 	public Elemento Zoom(double? zoomX = null, double? zoomY = null, int? duracion = null)
 	{
 		if (zoomX == null && zoomY == null)
@@ -112,6 +123,11 @@ public class Elemento
 		return this;
 	}
 
+	/// <summary>
+	/// Convierte al elemento en su nombre simple.
+	/// </summary>
+	/// <param name="elemento">Elemento a convertir.</param>
+	[EditorBrowsable(EditorBrowsableState.Never)]
 	public static implicit operator string(Elemento elemento)
 	{
 		return elemento.shapeName;

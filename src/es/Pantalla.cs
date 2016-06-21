@@ -27,16 +27,25 @@ public static class Pantalla
 		Tortuga.Ocultar();
 	}
 
+	/// <summary>
+	/// Muestra la pantalla de dibujo.
+	/// </summary>
 	public static void Mostrar()
 	{
 		screen.ShowWindow();
 	}
 
+	/// <summary>
+	/// Muestra la grilla cuadriculada de coordenadas.
+	/// </summary>
 	public static void MostrarGrilla()
 	{
 		screen.GridLines.Show();
 	}
 
+	/// <summary>
+	/// Oculta la grilla cuadriculada de coordenadas.
+	/// </summary>
 	public static void OcultarGrilla()
 	{
 		screen.GridLines.Hide();

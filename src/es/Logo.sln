@@ -9,6 +9,12 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Core", "..\Core\Core.shproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "..\Test\Test.csproj", "{A6AE494C-CFF7-437B-AE9F-3DA28A4E8570}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ECDEEAD8-D8CC-4A50-B259-452335DFDCF9}"
+	ProjectSection(SolutionItems) = preProject
+		..\Logo.props = ..\Logo.props
+		..\Logo.targets = ..\Logo.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Core\Core.projitems*{0b179c0d-a457-4dc3-9377-7ce9aab309b2}*SharedItemsImports = 13
