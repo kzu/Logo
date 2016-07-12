@@ -24,21 +24,21 @@ namespace Test
 		{
 			Tortuga.Lapiz.Color = Color.Verde;
 
-			Tortuga
-				.Mover(100)
-				.GirarDerecha();
+			//Tortuga
+			//	.Mover(100)
+			//	.GirarDerecha();
 
-			//Pintar
-			//	.Rectangulo(100, 100, 100, 300)
-			//	.Mover(x: 250, y: 250, duracion: 1500)
-			//	.Rotar(angulo: 180, duracion: 1500)
-			//	.Mover(duracion: 1500)
-			//	.Ocultar(duracion: 1500)
-			//	.Mostrar(duracion: 1500)
-			//	.Mover(x: 500, y: 500, duracion: 1500)
-			//	.Ocultar(duracion: 2000);
+			Pintar
+				.Rectangulo(100, 100, 100, 300)
+				.Mover(x: 250, y: 250, duracion: 1500)
+				.Rotar(angulo: 180, duracion: 1500)
+				.Mover(duracion: 1500)
+				.Ocultar(duracion: 1500)
+				.Mostrar(duracion: 1500)
+				.Mover(x: 500, y: 500, duracion: 1500)
+				.Ocultar(duracion: 2000);
 
-			//Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
+			Dibujar.Texto(x: 200, y: 200, texto: "Terminado!");
 		}
 	}
 }
