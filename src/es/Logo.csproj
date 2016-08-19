@@ -17,6 +17,12 @@
     <Compile Include="Velocidad.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="linqpad-samples\Getting Started\Prueba.linq">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Logo.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Logo.workbook" />
     <None Include="project.json" />
   </ItemGroup>

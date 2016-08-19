@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>Logo.es</id>
+		<version>0.1.0</version>
+		<title>Logo en español para Xamarin Workbooks</title>
+		<authors>Daniel Cazzulino</authors>
+		<owners>kzu</owners>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Aprende a programar con Xamarin Workbooks, C# y la legendaria Tortuga!</description>
+		<copyright>Copyright © 2016 Daniel Cazzulino </copyright>
+		<licenseUrl>https://raw.githubusercontent.com/kzu/Logo/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/kzu/Logo</projectUrl>
+		<tags>xamarin workbooks logo smallbasic linqpad-samples</tags>
+		<dependencies>
+			<group targetFramework=".NETFramework4.5">
+				<dependency id="SmallBasic.Workbook" version="1.2.0" exclude="Build,Analyzers" />
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="$assembly$.dll" target="lib\net45" />
+		<file src="$assembly$.xml" target="lib\net45" />
+		<file src="linqpad-samples\**\*.*" target="linqpad-samples" />
+	</files>
+</package>

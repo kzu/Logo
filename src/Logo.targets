@@ -9,7 +9,7 @@
 		<Reference Include="System.Windows.Forms" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
+		<Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" />
 	</ItemGroup>
 
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -25,8 +25,8 @@
 		<Out Condition=" '$(Out)' == '' ">$(MSBuildProjectDirectory)\$(OutputPath.TrimEnd('\'))</Out>
 	</PropertyGroup>
 
-	<Target Name="BuildPackage" DependsOnTargets="_GetNuGet">
-		<Exec Command='"$(NuGet)" Pack "$(MSBuildProjectFullPath)" -OutputDirectory "$(Out)" ' />
+	<Target Name="BuildPackage" DependsOnTargets="_GetNuGet;GitVersion">
+		<Exec Command='"$(NuGet)" Pack "$(MSBuildProjectDirectory)\$(OutputPath)Logo.nuspec" -Version $(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch) -Properties Assembly=$(AssemblyName) -OutputDirectory "$(Out)" ' />
 	</Target>
 	
 </Project>
